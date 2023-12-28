@@ -1,7 +1,9 @@
 import { createBrowserRouter } from 'react-router-dom';
 
+import { PostEditorPage } from '@/pages/PostEditorPage';
+import { SettingPage } from '@/pages/SettingPage';
+
 import App from './App';
-import { PostEditorPage } from './pages/PostEditorPage';
 
 const router = createBrowserRouter([
   {
@@ -9,7 +11,11 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: '',
+        path: '/setting',
+        element: <SettingPage></SettingPage>
+      },
+      {
+        path: '/',
         element: <PostEditorPage></PostEditorPage>
       }
     ]
