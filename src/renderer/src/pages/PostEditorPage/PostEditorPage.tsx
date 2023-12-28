@@ -1,11 +1,12 @@
 import { Flex } from '@/components/Common';
+import { PageLayout } from '@/layouts/PageLayout';
 import { css, cx } from '@style/css';
 
 import { PostEditor } from './components/PostEditor';
 
 export function PostEditorPage() {
   return (
-    <>
+    <PageLayout>
       <header>head</header>
       <main className={mainStyle}>
         <nav className={cx(navStyle)}>
@@ -26,7 +27,7 @@ export function PostEditorPage() {
         </Flex>
       </main>
       <footer>foot</footer>
-    </>
+    </PageLayout>
   );
 }
 
