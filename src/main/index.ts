@@ -4,13 +4,14 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import { app, shell, BrowserWindow, ipcMain } from 'electron';
 
 import { handleSetTitle, handleUpdateFile } from './events';
+import store from './store';
+
 function createWindow(): void {
-  /**
-   * 시작 사이즈 고정
-   */
+  const size = store.get('windowSize') as { width: number; height: number };
+
   const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 670,
+    width: size.width || 900,
+    height: size.height || 670,
     show: false,
     autoHideMenuBar: true,
     webPreferences: {
@@ -21,6 +22,11 @@ function createWindow(): void {
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show();
+  });
+
+  mainWindow.on('resize', () => {
+    const { width, height } = mainWindow.getBounds();
+    store.set('windowSize', { width, height });
   });
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
