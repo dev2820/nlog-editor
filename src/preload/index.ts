@@ -10,8 +10,13 @@ const api = {
     ipcRenderer.send('set-title', title);
   },
   updateFile: (filePath: string, content: string) => {
-    console.log(filePath, content);
     ipcRenderer.send('update-file', filePath, content);
+  },
+  fetchBasePath: () => {
+    return ipcRenderer.invoke('fetch-base-path');
+  },
+  setBasePath: (basePath: string) => {
+    ipcRenderer.send('set-base-path', basePath);
   }
 };
 

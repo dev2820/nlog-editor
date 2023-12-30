@@ -27,6 +27,8 @@ export function PostEditor({ ...props }: Props) {
 
   function handleUpdateFile() {
     window.api.updateFile(`./${title}`, content);
+    alert('저장되었습니다.');
+    // TODO: invoke-handle 관계로 바꿔서 파일 저장이 완료되면 완료를 받고 저장됨 여부를 출력하도록
   }
 
   return (

@@ -3,7 +3,12 @@ import { join } from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import { app, shell, BrowserWindow, ipcMain } from 'electron';
 
-import { handleSetTitle, handleUpdateFile } from './events';
+import {
+  handleSetTitle,
+  handleUpdateFile,
+  getBasePath,
+  handleUpdateBasePath
+} from './events';
 import store from './store';
 
 function createWindow(): void {
@@ -50,6 +55,8 @@ app.whenReady().then(() => {
 
   ipcMain.on('set-title', handleSetTitle);
   ipcMain.on('update-file', handleUpdateFile);
+  ipcMain.on('set-base-path', handleUpdateBasePath);
+  ipcMain.handle('fetch-base-path', getBasePath);
 
   createWindow();
 
