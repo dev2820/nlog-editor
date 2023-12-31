@@ -20,7 +20,9 @@ export async function handleUpdateFile(
 ) {
   // TODO: 트라이캐치로 감싸고, 저장 가능여부 파악하기
   const basePath = (store.get('basePath') as string) ?? '';
-  fs.appendFile(path.resolve(basePath, `${filePath}.md`), content);
+  const postFilePath = path.resolve(basePath, `${filePath}/${filePath}.md`);
+
+  fs.appendFile(postFilePath, content);
 }
 
 export function getBasePath() {
@@ -32,4 +34,37 @@ export function handleUpdateBasePath(
   basePath: string
 ) {
   store.set('basePath', basePath);
+}
+
+export async function createPost(
+  _: Electron.IpcMainInvokeEvent,
+  title: string
+) {
+  const basePath = (store.get('basePath') as string) ?? '';
+  const folderPath = path.resolve(basePath, title);
+  const postFilePath = path.resolve(folderPath, `${title}.md`);
+  try {
+    const currentDate = new Date();
+    await fs.mkdir(folderPath, { recursive: true });
+    await fs.writeFile(
+      postFilePath,
+      `---
+title: ${title}
+created: ${currentDate.toISOString()}
+---
+
+## What's New
+    `
+    );
+    return {
+      title,
+      created: currentDate,
+      content: `
+## What's New
+      `
+    };
+  } catch (err) {
+    // err handle
+    return null;
+  }
 }

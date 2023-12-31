@@ -17,6 +17,9 @@ const api = {
   },
   setBasePath: (basePath: string) => {
     ipcRenderer.send('set-base-path', basePath);
+  },
+  createPost: (title: string) => {
+    return ipcRenderer.invoke('create-post', title);
   }
 };
 

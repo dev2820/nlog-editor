@@ -1,8 +1,8 @@
 import '@blocknote/core/style.css';
 
-import { type ComponentProps } from 'react';
+import { useEffect, type ComponentProps } from 'react';
 
-import { BlockNoteEditor } from '@blocknote/core';
+import { type BlockNoteEditor, type Block } from '@blocknote/core';
 import { BlockNoteView, useBlockNote } from '@blocknote/react';
 
 import { css, cx } from '@style/css';
@@ -13,9 +13,15 @@ import { css, cx } from '@style/css';
 
 interface Props extends ComponentProps<'div'> {
   onChangeContent: (content: string) => void;
+  initMarkdown: string;
 }
 
-export function BlockEditor({ onChangeContent, className, ...props }: Props) {
+export function BlockEditor({
+  initMarkdown,
+  onChangeContent,
+  className,
+  ...props
+}: Props) {
   async function handleEditorContentChange(editor: BlockNoteEditor) {
     const markdown: string = await editor.blocksToMarkdown(
       editor.topLevelBlocks
@@ -28,6 +34,16 @@ export function BlockEditor({ onChangeContent, className, ...props }: Props) {
       handleEditorContentChange(editor);
     }
   });
+
+  useEffect(() => {
+    if (editor) {
+      const getBlocks = async () => {
+        const blocks: Block[] = await editor.markdownToBlocks(initMarkdown);
+        editor.replaceBlocks(editor.topLevelBlocks, blocks);
+      };
+      getBlocks();
+    }
+  }, [editor, initMarkdown]);
 
   return (
     <div className={cx(className)} {...props}>

@@ -7,7 +7,8 @@ import {
   handleSetTitle,
   handleUpdateFile,
   getBasePath,
-  handleUpdateBasePath
+  handleUpdateBasePath,
+  createPost
 } from './events';
 import store from './store';
 
@@ -57,6 +58,7 @@ app.whenReady().then(() => {
   ipcMain.on('update-file', handleUpdateFile);
   ipcMain.on('set-base-path', handleUpdateBasePath);
   ipcMain.handle('fetch-base-path', getBasePath);
+  ipcMain.handle('create-post', createPost);
 
   createWindow();
 
