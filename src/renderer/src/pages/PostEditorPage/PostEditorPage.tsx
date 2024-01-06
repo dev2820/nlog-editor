@@ -3,9 +3,9 @@ import { ChangeEvent, useState } from 'react';
 import { Button, Flex, Input } from '@/components/Common';
 import { isNil } from '@/utils/type';
 import { css, cx } from '@style/css';
+import { Post } from '@type/post';
 
 import { PostEditor } from './components/PostEditor';
-import { Post } from './types';
 
 export function PostEditorPage() {
   const [postTitle, setPostTitle] = useState('');

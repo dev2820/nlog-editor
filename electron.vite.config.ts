@@ -17,6 +17,10 @@ export default defineConfig({
         {
           find: '@style',
           replacement: resolve('src/renderer/styled-system')
+        },
+        {
+          find: '@type',
+          replacement: resolve('src/types')
         }
       ]
     },

@@ -21,7 +21,8 @@ module.exports = {
         extensions: ['.ts', '.js', '.jsx', '.tsx', '.mjs'],
         map: [
           ['@', './src/renderer/src/'],
-          ['@style', './src/renderer/styled-system/']
+          ['@style', './src/renderer/styled-system/'],
+          ['@type', './src/types/']
         ]
       }
     }

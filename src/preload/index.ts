@@ -20,6 +20,9 @@ const api = {
   },
   createPost: (title: string) => {
     return ipcRenderer.invoke('create-post', title);
+  },
+  fetchFileStructure() {
+    return ipcRenderer.invoke('fetch-file-structure');
   }
 };
 

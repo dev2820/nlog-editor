@@ -1,6 +1,7 @@
 import { ElectronAPI } from '@electron-toolkit/preload';
 
-import { Post } from '@/pages/PostEditorPage/types';
+import { type File } from '@type/file';
+import { type Post } from '@type/post';
 
 declare global {
   interface Window {
@@ -11,6 +12,7 @@ declare global {
       fetchBasePath: () => Promise<string>;
       setBasePath: (basePath: string) => void;
       createPost: (title: string) => Promise<Post | null>;
+      fetchFileStructure: () => Promise<File>;
     };
   }
 }

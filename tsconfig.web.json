@@ -5,6 +5,7 @@
     "src/renderer/src/**/*",
     "src/renderer/styled-system/**/*",
     "src/preload/*.d.ts",
+    "src/types/*.ts"
   ],
   "compilerOptions": {
     "composite": true,
@@ -16,6 +17,9 @@
       ],
       "@style/*": [
         "./src/renderer/styled-system/*"
+      ],
+      "@type/*": [
+        "./src/types/*"
       ]
     }
   }

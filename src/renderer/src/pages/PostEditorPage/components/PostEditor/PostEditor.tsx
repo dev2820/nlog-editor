@@ -4,8 +4,8 @@ import { BlockEditor } from '@/components/BlockEditor';
 import { Input } from '@/components/Common';
 import { isNil } from '@/utils/type';
 import { css } from '@style/css';
+import { Post } from '@type/post';
 
-import { Post } from '../../types';
 import { TitleInput } from '../TitleInput';
 
 interface Props extends ComponentProps<'div'> {
