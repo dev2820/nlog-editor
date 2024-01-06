@@ -48,23 +48,33 @@ export async function createPost(
     await fs.mkdir(folderPath, { recursive: true });
     await fs.writeFile(
       postFilePath,
-      `---
-title: ${title}
-created: ${currentDate.toISOString()}
----
-
-## What's New
-    `
+      getFrontMatter(title, currentDate) + getContent()
     );
     return {
       title,
       created: currentDate,
-      content: `
-## What's New
-      `
+      content: getContent()
     };
   } catch (err) {
     // err handle
     return null;
   }
 }
+
+const getFrontMatter = (title: string, created: Date) => {
+  const frontMatter = `
+---
+title: ${title}
+created: ${created.toISOString()}
+---
+  `;
+
+  return frontMatter;
+};
+const getContent = () => {
+  const template = `
+## What's New
+`;
+
+  return template;
+};
