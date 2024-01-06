@@ -1,40 +1,70 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 
 import { Button, Flex, Input } from '@/components/Common';
 import { isNil } from '@/utils/type';
 import { css, cx } from '@style/css';
-import { Post } from '@type/post';
+import { File } from '@type/file';
 
 import { PostEditor } from './components/PostEditor';
 
+/**
+ * TODO: 포스트 리스트를 클릭시 로드하는 기능 추가
+ */
 export function PostEditorPage() {
-  const [postTitle, setPostTitle] = useState('');
-  const [post, setPost] = useState<Post>({
-    title: '',
-    created: new Date(),
-    content: ''
-  });
+  const [newPostTitle, setNewPostTitle] = useState('');
+  const [postName, setPostName] = useState<string>('');
+  const [title, setTitle] = useState<string>('');
+  const [content, setContent] = useState<string>('');
+  const [files, setFiles] = useState<File<'post' | 'image'>[]>([]);
   function handleChangeTitle(evt: ChangeEvent<HTMLInputElement>) {
     const title = evt.target.value;
-    setPostTitle(title);
+    setNewPostTitle(title);
   }
   async function handleCreateNewPost() {
-    const newPost = await window.api.createPost(postTitle);
-    setPostTitle('');
+    const newPost = await window.api.createPost(newPostTitle);
     if (isNil(newPost)) return;
-    setPost(newPost);
+    setPostName(newPost.title);
+    setTitle(newPost.title);
+    setContent(newPost.content);
+    setNewPostTitle('');
+    updateFiles();
   }
 
-  function handleUpdatePost() {
-    window.api.updateFile(`./${post.title}`, post.content);
-    alert('저장되었습니다.');
+  function handleUpdateContent(newContent: string) {
+    setContent(newContent);
   }
+
+  function handleUpdateTitle(newTitle: string) {
+    setTitle(newTitle);
+  }
+
+  function saveUpdatePost() {
+    window.api.updateFile(postName, {
+      title,
+      created: new Date(), // 임시 created, 전달받은 날짜를 가져오도록 해야함
+      content
+    });
+    alert('저장되었습니다.');
+    updateFiles();
+  }
+
+  async function updateFiles() {
+    const files = await window.api.fetchFileStructure();
+    setFiles(files);
+  }
+
+  useEffect(() => {
+    updateFiles();
+  }, []);
 
   return (
     <Flex direction="row">
       <aside className={cx(explorerStyle)}>
-        <Input value={postTitle} onChange={handleChangeTitle}></Input>
+        <Input value={newPostTitle} onChange={handleChangeTitle}></Input>
         <Button onClick={handleCreateNewPost}>새 글쓰기</Button>
+        {files.map((file) => (
+          <li key={file.fileName}>{file.fileName}</li>
+        ))}
       </aside>
       <Flex
         as="article"
@@ -47,12 +77,14 @@ export function PostEditorPage() {
         )}
       >
         <PostEditor
-          post={post}
-          onUpdatePost={handleUpdatePost}
+          title={title}
+          content={content}
+          onUpdateContent={handleUpdateContent}
+          onUpdateTitle={handleUpdateTitle}
           className={editorLayout}
         ></PostEditor>
 
-        <Button onClick={handleUpdatePost}>저장하기</Button>
+        <Button onClick={saveUpdatePost}>저장하기</Button>
       </Flex>
     </Flex>
   );

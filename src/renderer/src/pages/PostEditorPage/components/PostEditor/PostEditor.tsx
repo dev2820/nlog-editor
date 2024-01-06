@@ -4,7 +4,6 @@ import { BlockEditor } from '@/components/BlockEditor';
 import { Input } from '@/components/Common';
 import { isNil } from '@/utils/type';
 import { css } from '@style/css';
-import { Post } from '@type/post';
 
 import { TitleInput } from '../TitleInput';
 
@@ -12,37 +11,37 @@ interface Props extends ComponentProps<'div'> {
   /**
    * Post에 대한 CRUD가 가능한 Context를 받는다.
    */
-  post: Post;
-  onUpdatePost?: (newPost: Post) => void;
+  title: string;
+  content: string;
+  onUpdateContent?: (newContent: string) => void;
+  onUpdateTitle?: (newTitle: string) => void;
 }
 
-export function PostEditor({ post, onUpdatePost, ...props }: Props) {
+export function PostEditor({
+  title,
+  content,
+  onUpdateContent,
+  onUpdateTitle,
+  ...props
+}: Props) {
   function handleEditorContentChange(newContent: string): void {
-    if (isNil(onUpdatePost)) return;
+    if (isNil(onUpdateContent)) return;
 
-    onUpdatePost({
-      ...post,
-      content: newContent
-    });
+    onUpdateContent(newContent);
   }
 
   function handleTitleChange(evt: ChangeEvent<HTMLInputElement>) {
     const newTitle = evt.target.value;
+    if (isNil(onUpdateTitle)) return;
 
-    if (isNil(onUpdatePost)) return;
-
-    onUpdatePost({
-      ...post,
-      title: newTitle
-    });
+    onUpdateTitle(newTitle);
   }
-  console.log(post.content);
 
   return (
     <div {...props}>
       <section id="meta-data-area">
         <TitleInput
-          value={post.title}
+          value={title}
           onChange={handleTitleChange}
           className={titleInputStyle}
         ></TitleInput>
@@ -50,7 +49,7 @@ export function PostEditor({ post, onUpdatePost, ...props }: Props) {
       </section>
       <BlockEditor
         onChangeContent={handleEditorContentChange}
-        initMarkdown={post.content}
+        initMarkdown={content}
       ></BlockEditor>
     </div>
   );

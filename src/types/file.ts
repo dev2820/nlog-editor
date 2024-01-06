@@ -1,8 +1,6 @@
 export type File<T extends string = ''> = {
   fileName: string;
-  created: Date;
-  type: keyof T;
-  children: File<T>[];
+  type: T;
 };
 
 export type PostFile = File<'post'>;

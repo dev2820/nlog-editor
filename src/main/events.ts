@@ -3,6 +3,9 @@ import path from 'node:path';
 
 import { BrowserWindow } from 'electron';
 
+import { type File } from '@type/file';
+import { Post } from '@type/post';
+
 import store from './store';
 
 export function handleSetTitle(evt: Electron.IpcMainEvent, title: string) {
@@ -15,14 +18,20 @@ export function handleSetTitle(evt: Electron.IpcMainEvent, title: string) {
 
 export async function handleUpdateFile(
   _: Electron.IpcMainEvent,
-  filePath: string,
-  content: string
+  fileName: string,
+  post: Post
 ) {
   // TODO: 트라이캐치로 감싸고, 저장 가능여부 파악하기
   const basePath = (store.get('basePath') as string) ?? '';
-  const postFilePath = path.resolve(basePath, `${filePath}/${filePath}.md`);
+  const postFilePath = path.resolve(basePath, `./${fileName}/index.md`);
 
-  fs.appendFile(postFilePath, content);
+  fs.writeFile(
+    postFilePath,
+    `
+${getFrontMatter(post.title, post.created)}
+${post.content}
+`
+  );
 }
 
 export function getBasePath() {
@@ -42,7 +51,7 @@ export async function createPost(
 ) {
   const basePath = (store.get('basePath') as string) ?? '';
   const folderPath = path.resolve(basePath, title);
-  const postFilePath = path.resolve(folderPath, `${title}.md`);
+  const postFilePath = path.resolve(folderPath, 'index.md');
   try {
     const currentDate = new Date();
     await fs.mkdir(folderPath, { recursive: true });
@@ -58,6 +67,34 @@ export async function createPost(
   } catch (err) {
     // err handle
     return null;
+  }
+}
+
+export async function fetchFileStructure(): Promise<File<'post' | 'image'>[]> {
+  const basePath = (store.get('basePath') as string) ?? '';
+
+  try {
+    const fileNames = await fs.readdir(basePath);
+    const fileStats = await Promise.all(
+      fileNames.map((fileName) => {
+        const filePath = path.resolve(basePath, fileName);
+        return fs.lstat(filePath);
+      })
+    );
+    const postNames = fileNames.filter((_, index) => {
+      return fileStats[index].isDirectory();
+    });
+
+    const files = postNames.map((postName) => {
+      return {
+        fileName: postName,
+        type: 'post'
+      } as File<'post' | 'image'>;
+    });
+
+    return files;
+  } catch (err) {
+    return [];
   }
 }
 

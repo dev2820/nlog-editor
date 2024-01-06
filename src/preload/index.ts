@@ -1,6 +1,8 @@
 import { electronAPI } from '@electron-toolkit/preload';
 import { contextBridge, ipcRenderer } from 'electron';
 
+import { Post } from '@type/post';
+
 ipcRenderer.on('pong', (_event, args) => {
   console.log(args);
 });
@@ -9,8 +11,8 @@ const api = {
   setTitle: (title: string) => {
     ipcRenderer.send('set-title', title);
   },
-  updateFile: (filePath: string, content: string) => {
-    ipcRenderer.send('update-file', filePath, content);
+  updateFile: (fileName: string, post: Post) => {
+    ipcRenderer.send('update-file', fileName, post);
   },
   fetchBasePath: () => {
     return ipcRenderer.invoke('fetch-base-path');

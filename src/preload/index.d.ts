@@ -8,11 +8,11 @@ declare global {
     electron: ElectronAPI;
     api: {
       setTitle: (title: string) => void;
-      updateFile: (filePath: string, content: string) => void;
+      updateFile: (fileName: string, post: Post) => void;
       fetchBasePath: () => Promise<string>;
       setBasePath: (basePath: string) => void;
       createPost: (title: string) => Promise<Post | null>;
-      fetchFileStructure: () => Promise<File>;
+      fetchFileStructure: () => Promise<File<'post' | 'image'>[]>;
     };
   }
 }
