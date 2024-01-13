@@ -15,6 +15,7 @@ export function PostEditorPage() {
   const [postName, setPostName] = useState<string>('');
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
+  const [initContent, setInitContent] = useState<string>('');
   const [files, setFiles] = useState<File<'post' | 'image'>[]>([]);
   function handleChangeTitle(evt: ChangeEvent<HTMLInputElement>) {
     const title = evt.target.value;
@@ -44,6 +45,7 @@ export function PostEditorPage() {
 
     setPostName(post.title);
     setTitle(post.title);
+    setInitContent(post.content);
     setContent(post.content);
   }
 
@@ -60,6 +62,8 @@ export function PostEditorPage() {
     } else {
       alert('저장에 실패했습니다.');
     }
+
+    setInitContent(content);
   }
 
   async function updateFiles() {
@@ -97,7 +101,7 @@ export function PostEditorPage() {
       >
         <PostEditor
           title={title}
-          content={content}
+          content={initContent}
           onUpdateContent={handleUpdateContent}
           onUpdateTitle={handleUpdateTitle}
           className={editorLayout}
