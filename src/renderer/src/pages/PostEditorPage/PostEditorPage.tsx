@@ -38,14 +38,28 @@ export function PostEditorPage() {
     setTitle(newTitle);
   }
 
-  function saveUpdatePost() {
-    window.api.updateFile(postName, {
+  async function handleLoadPost(postName: string) {
+    const post = await window.api.loadPost(postName);
+    if (isNil(post)) return;
+
+    setPostName(post.title);
+    setTitle(post.title);
+    setContent(post.content);
+  }
+
+  async function handleSavePost() {
+    const isSuccess = await window.api.savePost(postName, {
       title,
       created: new Date(), // 임시 created, 전달받은 날짜를 가져오도록 해야함
       content
     });
-    alert('저장되었습니다.');
-    updateFiles();
+    if (isSuccess) {
+      alert('저장되었습니다.');
+
+      updateFiles();
+    } else {
+      alert('저장에 실패했습니다.');
+    }
   }
 
   async function updateFiles() {
@@ -63,12 +77,17 @@ export function PostEditorPage() {
         <Input value={newPostTitle} onChange={handleChangeTitle}></Input>
         <Button onClick={handleCreateNewPost}>새 글쓰기</Button>
         {files.map((file) => (
-          <li key={file.fileName}>{file.fileName}</li>
+          <li key={file.fileName}>
+            <Button onClick={() => handleLoadPost(file.fileName)}>
+              {file.fileName}
+            </Button>
+          </li>
         ))}
       </aside>
       <Flex
         as="article"
         justify="center"
+        direction="column"
         className={cx(
           css({
             flexGrow: 1,
@@ -84,7 +103,7 @@ export function PostEditorPage() {
           className={editorLayout}
         ></PostEditor>
 
-        <Button onClick={saveUpdatePost}>저장하기</Button>
+        <Button onClick={handleSavePost}>저장하기</Button>
       </Flex>
     </Flex>
   );
@@ -97,5 +116,6 @@ const explorerStyle = css({
 
 const editorLayout = css({
   maxWidth: '900px',
-  width: 'full'
+  width: 'full',
+  flexGrow: 1
 });

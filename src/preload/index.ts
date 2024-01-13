@@ -11,8 +11,8 @@ const api = {
   setTitle: (title: string) => {
     ipcRenderer.send('set-title', title);
   },
-  updateFile: (fileName: string, post: Post) => {
-    ipcRenderer.send('update-file', fileName, post);
+  savePost: (fileName: string, post: Post) => {
+    return ipcRenderer.invoke('save-post', fileName, post);
   },
   fetchBasePath: () => {
     return ipcRenderer.invoke('fetch-base-path');
@@ -25,6 +25,9 @@ const api = {
   },
   fetchFileStructure() {
     return ipcRenderer.invoke('fetch-file-structure');
+  },
+  loadPost: (title: string) => {
+    return ipcRenderer.invoke('load-post', title);
   }
 };
 

@@ -5,11 +5,12 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron';
 
 import {
   handleSetTitle,
-  handleUpdateFile,
+  savePost,
   getBasePath,
   handleUpdateBasePath,
   createPost,
-  fetchFileStructure
+  fetchFileStructure,
+  loadPost
 } from './events';
 import store from './store';
 
@@ -56,11 +57,12 @@ app.whenReady().then(() => {
   });
 
   ipcMain.on('set-title', handleSetTitle);
-  ipcMain.on('update-file', handleUpdateFile);
+  ipcMain.handle('save-post', savePost);
   ipcMain.on('set-base-path', handleUpdateBasePath);
   ipcMain.handle('fetch-base-path', getBasePath);
   ipcMain.handle('create-post', createPost);
   ipcMain.handle('fetch-file-structure', fetchFileStructure);
+  ipcMain.handle('load-post', loadPost);
 
   createWindow();
 
