@@ -15,6 +15,7 @@ export function PostEditorPage() {
   const [postName, setPostName] = useState<string>('');
   const [title, setTitle] = useState<string>('');
   const [created, setCreated] = useState<Date>(new Date(0));
+  const [modified, setModified] = useState<Date>(new Date(0));
   const [content, setContent] = useState<string>('');
   const [initContent, setInitContent] = useState<string>('');
   const [files, setFiles] = useState<File<'post' | 'image'>[]>([]);
@@ -27,6 +28,8 @@ export function PostEditorPage() {
     if (isNil(newPost)) return;
     setPostName(newPost.title);
     setTitle(newPost.title);
+    setCreated(new Date(newPost.created));
+    setModified(new Date(newPost.modified));
     setContent(newPost.content);
     setNewPostTitle('');
     updateFiles();
@@ -49,6 +52,7 @@ export function PostEditorPage() {
     setPostName(post.title);
     setTitle(post.title);
     setCreated(new Date(post.created));
+    setModified(new Date(post.modified));
     setInitContent(post.content);
     setContent(post.content);
   }
@@ -57,6 +61,7 @@ export function PostEditorPage() {
     const isSuccess = await window.api.savePost(postName, {
       title,
       created,
+      modified,
       content
     });
     if (isSuccess) {
@@ -66,7 +71,7 @@ export function PostEditorPage() {
     } else {
       alert('저장에 실패했습니다.');
     }
-
+    setModified(new Date());
     setInitContent(content);
   }
 
@@ -106,6 +111,7 @@ export function PostEditorPage() {
         <PostEditor
           title={title}
           created={created}
+          modified={modified}
           content={initContent}
           onUpdateContent={handleUpdateContent}
           onUpdateTitle={handleUpdateTitle}

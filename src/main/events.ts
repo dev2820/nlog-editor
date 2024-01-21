@@ -29,7 +29,7 @@ export async function savePost(
   try {
     await fs.writeFile(
       postFilePath,
-      `${getFrontMatter(post.title, post.created)}
+      `${getFrontMatter(post.title, post.created, post.modified)}
 ${post.content}
 `.trim()
     );
@@ -63,7 +63,7 @@ export async function createPost(
     await fs.mkdir(folderPath, { recursive: true });
     await fs.writeFile(
       postFilePath,
-      getFrontMatter(title, currentDate) + getContent()
+      getFrontMatter(title, currentDate, currentDate) + getContent()
     );
     return {
       title,
@@ -118,6 +118,7 @@ export async function loadPost(
     return {
       title: data.title,
       created: data.created,
+      modified: data.modified,
       content
     };
   } catch (err) {
@@ -125,10 +126,11 @@ export async function loadPost(
   }
 }
 
-const getFrontMatter = (title: string, created: Date) => {
+const getFrontMatter = (title: string, created: Date, modified: Date) => {
   const frontMatter = `---
 title: ${title}
 created: ${created.toISOString()}
+modified: ${modified.toISOString()}
 ---
   `;
 

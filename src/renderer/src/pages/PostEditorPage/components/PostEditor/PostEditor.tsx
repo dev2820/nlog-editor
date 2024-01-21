@@ -3,7 +3,7 @@ import { ChangeEvent, ComponentProps } from 'react';
 import dayjs from 'dayjs';
 
 import { BlockEditor } from '@/components/BlockEditor';
-import { Input } from '@/components/Common';
+import { Flex, Input } from '@/components/Common';
 import { isNil } from '@/utils/type';
 import { css } from '@style/css';
 
@@ -15,6 +15,7 @@ interface Props extends ComponentProps<'div'> {
    */
   title: string;
   created: Date;
+  modified: Date;
   content: string;
   onUpdateTitle?: (newTitle: string) => void;
   onUpdateCreated?: (newCreated: Date) => void;
@@ -24,6 +25,7 @@ interface Props extends ComponentProps<'div'> {
 export function PostEditor({
   title,
   created,
+  modified,
   content,
   onUpdateContent,
   onUpdateCreated,
@@ -52,7 +54,12 @@ export function PostEditor({
 
   return (
     <div {...props}>
-      <section id="meta-data-area" className={metaAreaStyle}>
+      <Flex
+        as="section"
+        direction="column"
+        id="meta-data-area"
+        className={metaAreaStyle}
+      >
         <TitleInput
           value={title}
           onChange={handleTitleChange}
@@ -66,7 +73,15 @@ export function PostEditor({
             onChange={handleCreatedChange}
           ></Input>
         </label>
-      </section>
+        <label>
+          modified:
+          <Input
+            type="datetime-local"
+            value={dayjs(modified.toISOString()).format('YYYY-MM-DDTHH:mm:ss')}
+            readOnly
+          ></Input>
+        </label>
+      </Flex>
       <BlockEditor
         onChangeContent={handleEditorContentChange}
         initMarkdown={content}
