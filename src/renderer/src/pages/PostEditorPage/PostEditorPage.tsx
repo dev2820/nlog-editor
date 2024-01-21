@@ -14,6 +14,7 @@ export function PostEditorPage() {
   const [newPostTitle, setNewPostTitle] = useState('');
   const [postName, setPostName] = useState<string>('');
   const [title, setTitle] = useState<string>('');
+  const [created, setCreated] = useState<Date>(new Date(0));
   const [content, setContent] = useState<string>('');
   const [initContent, setInitContent] = useState<string>('');
   const [files, setFiles] = useState<File<'post' | 'image'>[]>([]);
@@ -38,13 +39,16 @@ export function PostEditorPage() {
   function handleUpdateTitle(newTitle: string) {
     setTitle(newTitle);
   }
+  function handleUpdateCreated(newCreated: Date) {
+    setCreated(newCreated);
+  }
 
   async function handleLoadPost(postName: string) {
     const post = await window.api.loadPost(postName);
     if (isNil(post)) return;
-
     setPostName(post.title);
     setTitle(post.title);
+    setCreated(new Date(post.created));
     setInitContent(post.content);
     setContent(post.content);
   }
@@ -52,7 +56,7 @@ export function PostEditorPage() {
   async function handleSavePost() {
     const isSuccess = await window.api.savePost(postName, {
       title,
-      created: new Date(), // 임시 created, 전달받은 날짜를 가져오도록 해야함
+      created,
       content
     });
     if (isSuccess) {
@@ -101,9 +105,11 @@ export function PostEditorPage() {
       >
         <PostEditor
           title={title}
+          created={created}
           content={initContent}
           onUpdateContent={handleUpdateContent}
           onUpdateTitle={handleUpdateTitle}
+          onUpdateCreated={handleUpdateCreated}
           className={editorLayout}
         ></PostEditor>
 

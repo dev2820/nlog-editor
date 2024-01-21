@@ -1,5 +1,7 @@
 import { ChangeEvent, ComponentProps } from 'react';
 
+import dayjs from 'dayjs';
+
 import { BlockEditor } from '@/components/BlockEditor';
 import { Input } from '@/components/Common';
 import { isNil } from '@/utils/type';
@@ -12,15 +14,19 @@ interface Props extends ComponentProps<'div'> {
    * Post에 대한 CRUD가 가능한 Context를 받는다.
    */
   title: string;
+  created: Date;
   content: string;
-  onUpdateContent?: (newContent: string) => void;
   onUpdateTitle?: (newTitle: string) => void;
+  onUpdateCreated?: (newCreated: Date) => void;
+  onUpdateContent?: (newContent: string) => void;
 }
 
 export function PostEditor({
   title,
+  created,
   content,
   onUpdateContent,
+  onUpdateCreated,
   onUpdateTitle,
   ...props
 }: Props) {
@@ -31,10 +37,17 @@ export function PostEditor({
   }
 
   function handleTitleChange(evt: ChangeEvent<HTMLInputElement>) {
-    const newTitle = evt.target.value;
     if (isNil(onUpdateTitle)) return;
 
+    const newTitle = evt.target.value;
     onUpdateTitle(newTitle);
+  }
+
+  function handleCreatedChange(evt: ChangeEvent<HTMLInputElement>) {
+    if (isNil(onUpdateCreated)) return;
+
+    const newCreated = new Date(evt.target.value);
+    onUpdateCreated(newCreated);
   }
 
   return (
@@ -45,7 +58,14 @@ export function PostEditor({
           onChange={handleTitleChange}
           className={titleInputStyle}
         ></TitleInput>
-        <Input type="datetime-local"></Input>
+        <label>
+          created:
+          <Input
+            type="datetime-local"
+            value={dayjs(created.toISOString()).format('YYYY-MM-DDTHH:mm:ss')}
+            onChange={handleCreatedChange}
+          ></Input>
+        </label>
       </section>
       <BlockEditor
         onChangeContent={handleEditorContentChange}
