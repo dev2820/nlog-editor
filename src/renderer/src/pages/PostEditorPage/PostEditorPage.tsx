@@ -92,7 +92,7 @@ export function PostEditorPage() {
   }, []);
 
   return (
-    <Flex direction="row">
+    <Flex direction="row" className={style}>
       <aside className={cx(explorerStyle)}>
         <Input value={newPostTitle} onChange={handleChangeTitle}></Input>
         <Button onClick={handleCreateNewPost}>새 글쓰기</Button>
@@ -133,6 +133,10 @@ export function PostEditorPage() {
     </Flex>
   );
 }
+
+const style = css({
+  width: 'full'
+});
 
 const explorerStyle = css({
   width: 60,
