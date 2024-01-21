@@ -17,9 +17,11 @@ interface Props extends ComponentProps<'div'> {
   created: Date;
   modified: Date;
   content: string;
+  slug: string;
   onUpdateTitle?: (newTitle: string) => void;
   onUpdateCreated?: (newCreated: Date) => void;
   onUpdateContent?: (newContent: string) => void;
+  onUpdateSlug?: (newSlug: string) => void;
 }
 
 export function PostEditor({
@@ -27,9 +29,11 @@ export function PostEditor({
   created,
   modified,
   content,
+  slug,
   onUpdateContent,
   onUpdateCreated,
   onUpdateTitle,
+  onUpdateSlug,
   ...props
 }: Props) {
   function handleEditorContentChange(newContent: string): void {
@@ -50,6 +54,13 @@ export function PostEditor({
 
     const newCreated = new Date(evt.target.value);
     onUpdateCreated(newCreated);
+  }
+
+  function handleSlugChange(evt: ChangeEvent<HTMLInputElement>) {
+    if (isNil(onUpdateSlug)) return;
+
+    const newSlug = evt.target.value;
+    onUpdateSlug(newSlug);
   }
 
   return (
@@ -80,6 +91,10 @@ export function PostEditor({
             value={dayjs(modified.toISOString()).format('YYYY-MM-DDTHH:mm:ss')}
             readOnly
           ></Input>
+        </label>
+        <label>
+          slug:
+          <Input type="text" value={slug} onChange={handleSlugChange}></Input>
         </label>
       </Flex>
       <BlockEditor

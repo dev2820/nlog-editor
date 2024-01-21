@@ -3,4 +3,5 @@ export type Post = {
   created: Date;
   modified: Date;
   content: string;
+  slug: string;
 };

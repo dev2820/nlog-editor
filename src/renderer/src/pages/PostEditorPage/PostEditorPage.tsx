@@ -18,6 +18,7 @@ export function PostEditorPage() {
   const [modified, setModified] = useState<Date>(new Date(0));
   const [content, setContent] = useState<string>('');
   const [initContent, setInitContent] = useState<string>('');
+  const [slug, setSlug] = useState<string>('');
   const [files, setFiles] = useState<File<'post' | 'image'>[]>([]);
   function handleChangeTitle(evt: ChangeEvent<HTMLInputElement>) {
     const title = evt.target.value;
@@ -31,6 +32,8 @@ export function PostEditorPage() {
     setCreated(new Date(newPost.created));
     setModified(new Date(newPost.modified));
     setContent(newPost.content);
+    setInitContent(newPost.content);
+    setSlug(newPost.title);
     setNewPostTitle('');
     updateFiles();
   }
@@ -38,12 +41,14 @@ export function PostEditorPage() {
   function handleUpdateContent(newContent: string) {
     setContent(newContent);
   }
-
   function handleUpdateTitle(newTitle: string) {
     setTitle(newTitle);
   }
   function handleUpdateCreated(newCreated: Date) {
     setCreated(newCreated);
+  }
+  function handleUpdateSlug(newSlug: string) {
+    setSlug(newSlug);
   }
 
   async function handleLoadPost(postName: string) {
@@ -53,6 +58,7 @@ export function PostEditorPage() {
     setTitle(post.title);
     setCreated(new Date(post.created));
     setModified(new Date(post.modified));
+    setSlug(post.slug);
     setInitContent(post.content);
     setContent(post.content);
   }
@@ -62,7 +68,8 @@ export function PostEditorPage() {
       title,
       created,
       modified,
-      content
+      content,
+      slug
     });
     if (isSuccess) {
       alert('저장되었습니다.');
@@ -113,9 +120,11 @@ export function PostEditorPage() {
           created={created}
           modified={modified}
           content={initContent}
+          slug={slug}
           onUpdateContent={handleUpdateContent}
           onUpdateTitle={handleUpdateTitle}
           onUpdateCreated={handleUpdateCreated}
+          onUpdateSlug={handleUpdateSlug}
           className={editorLayout}
         ></PostEditor>
 
