@@ -21,6 +21,5 @@ const style = css({
 });
 
 const boxStyle = css({
-  pl: '3.475rem',
   outline: 'none'
 });

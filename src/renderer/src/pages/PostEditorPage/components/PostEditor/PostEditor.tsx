@@ -39,7 +39,7 @@ export function PostEditor({
 
   return (
     <div {...props}>
-      <section id="meta-data-area">
+      <section id="meta-data-area" className={metaAreaStyle}>
         <TitleInput
           value={title}
           onChange={handleTitleChange}
@@ -57,4 +57,8 @@ export function PostEditor({
 
 const titleInputStyle = css({
   width: 'full'
+});
+
+const metaAreaStyle = css({
+  pl: '3.45rem'
 });
