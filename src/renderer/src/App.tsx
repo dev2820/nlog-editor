@@ -8,8 +8,8 @@ import { PageLayout } from './layouts/PageLayout';
 export default function App() {
   return (
     <PageLayout>
-      <header>head</header>
-      <div className={cx(css({ flexGrow: 1 }))}>
+      <header className={cx(headerStyle)}>head</header>
+      <div className={cx(bodyStyle)}>
         <nav className={cx(navStyle)}>
           <menu>
             <li>
@@ -24,7 +24,7 @@ export default function App() {
           <Outlet></Outlet>
         </main>
       </div>
-      <footer>footer</footer>
+      <footer className={cx(footerStyle)}>footer</footer>
     </PageLayout>
   );
 }
@@ -33,12 +33,24 @@ const mainStyle = css({
   flexGrow: 1,
   display: 'flex',
   flexDirection: 'row',
-  overflow: 'hidden',
   height: 'full'
+});
+
+const bodyStyle = css({
+  height: 'calc(100% - 3.4rem)',
+  overflow: 'hidden'
 });
 
 const navStyle = css({
   float: 'left',
   width: 20,
   height: 'full'
+});
+
+const headerStyle = css({
+  height: '1.7rem'
+});
+
+const footerStyle = css({
+  height: '1.7rem'
 });
