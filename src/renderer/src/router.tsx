@@ -11,12 +11,12 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: '/setting',
-        element: <SettingPage></SettingPage>
+        path: '/editor',
+        element: <PostEditorPage></PostEditorPage>
       },
       {
-        path: '/',
-        element: <PostEditorPage></PostEditorPage>
+        path: '/setting',
+        element: <SettingPage></SettingPage>
       }
     ]
   }

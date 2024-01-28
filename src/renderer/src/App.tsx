@@ -14,7 +14,7 @@ export default function App() {
         <nav className={cx(navStyle)}>
           <menu>
             <li>
-              <Link to={'/'}>에디터</Link>
+              <Link to={'/editor'}>에디터</Link>
             </li>
             <li>
               <Link to={'/setting'}>세팅</Link>
