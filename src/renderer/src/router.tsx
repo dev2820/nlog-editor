@@ -1,5 +1,6 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { Outlet, createBrowserRouter } from 'react-router-dom';
 
+import { LandingPage } from '@/pages/LandingPage';
 import { PostEditorPage } from '@/pages/PostEditorPage';
 import { SettingPage } from '@/pages/SettingPage';
 
@@ -12,11 +13,25 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/editor',
-        element: <PostEditorPage></PostEditorPage>
+        element: <Outlet></Outlet>,
+        children: [
+          {
+            index: true,
+            element: <PostEditorPage></PostEditorPage>
+          },
+          {
+            path: ':id',
+            element: <PostEditorPage></PostEditorPage>
+          }
+        ]
       },
       {
         path: '/setting',
         element: <SettingPage></SettingPage>
+      },
+      {
+        path: '*',
+        element: <LandingPage></LandingPage>
       }
     ]
   }

@@ -1,5 +1,7 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 
+import { Link, useParams } from 'react-router-dom';
+
 import { Button, Flex, Input } from '@/components/Common';
 import { isNil } from '@/utils/type';
 import { css, cx } from '@style/css';
@@ -11,6 +13,7 @@ import { PostEditor } from './components/PostEditor';
  * TODO: 포스트 리스트를 클릭시 로드하는 기능 추가
  */
 export function PostEditorPage() {
+  const { id } = useParams();
   const [newPostTitle, setNewPostTitle] = useState('');
   const [postName, setPostName] = useState<string>('');
   const [title, setTitle] = useState<string>('');
@@ -20,10 +23,12 @@ export function PostEditorPage() {
   const [initContent, setInitContent] = useState<string>('');
   const [slug, setSlug] = useState<string>('');
   const [files, setFiles] = useState<File<'post' | 'image'>[]>([]);
+
   function handleChangeTitle(evt: ChangeEvent<HTMLInputElement>) {
     const title = evt.target.value;
     setNewPostTitle(title);
   }
+
   async function handleCreateNewPost() {
     const newPost = await window.api.createPost(newPostTitle);
     if (isNil(newPost)) return;
@@ -91,6 +96,12 @@ export function PostEditorPage() {
     updateFiles();
   }, []);
 
+  useEffect(() => {
+    if (isNil(id)) return;
+
+    handleLoadPost(id);
+  }, [id]);
+
   return (
     <Flex direction="row" className={style}>
       <aside className={cx(explorerStyle)}>
@@ -98,9 +109,7 @@ export function PostEditorPage() {
         <Button onClick={handleCreateNewPost}>새 글쓰기</Button>
         {files.map((file) => (
           <li key={file.fileName}>
-            <Button onClick={() => handleLoadPost(file.fileName)}>
-              {file.fileName}
-            </Button>
+            <Link to={`/editor/${file.fileName}`}>{file.fileName}</Link>
           </li>
         ))}
       </aside>
