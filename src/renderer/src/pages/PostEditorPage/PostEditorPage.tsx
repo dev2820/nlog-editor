@@ -106,12 +106,11 @@ export function PostEditorPage() {
       </aside>
       <Flex
         as="article"
-        justify="center"
+        justify="flex-start"
         direction="column"
         className={cx(
           css({
-            flexGrow: 1,
-            overflow: 'auto'
+            flexGrow: 1
           })
         )}
       >
@@ -127,7 +126,6 @@ export function PostEditorPage() {
           onUpdateSlug={handleUpdateSlug}
           className={editorLayout}
         ></PostEditor>
-
         <Button onClick={handleSavePost}>저장하기</Button>
       </Flex>
     </Flex>
@@ -135,7 +133,8 @@ export function PostEditorPage() {
 }
 
 const style = css({
-  width: 'full'
+  width: 'full',
+  height: 'full'
 });
 
 const explorerStyle = css({
@@ -146,5 +145,6 @@ const explorerStyle = css({
 const editorLayout = css({
   maxWidth: '900px',
   width: 'full',
-  flexGrow: 1
+  flexGrow: 1,
+  height: 'full'
 });

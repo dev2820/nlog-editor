@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import { BlockEditor } from '@/components/BlockEditor';
 import { Flex, Input } from '@/components/Common';
 import { isNil } from '@/utils/type';
-import { css } from '@style/css';
+import { css, cx } from '@style/css';
 
 import { TitleInput } from '../TitleInput';
 
@@ -30,6 +30,7 @@ export function PostEditor({
   modified,
   content,
   slug,
+  className,
   onUpdateContent,
   onUpdateCreated,
   onUpdateTitle,
@@ -64,7 +65,7 @@ export function PostEditor({
   }
 
   return (
-    <div {...props}>
+    <div {...props} className={cx(className, style)}>
       <Flex
         as="section"
         direction="column"
@@ -105,6 +106,9 @@ export function PostEditor({
   );
 }
 
+const style = css({
+  overflow: 'auto'
+});
 const titleInputStyle = css({
   width: 'full'
 });

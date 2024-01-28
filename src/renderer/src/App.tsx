@@ -3,13 +3,14 @@ import { Link, Outlet } from 'react-router-dom';
 import './assets/index.css';
 import { css, cx } from '@style/css';
 
+import { Flex } from './components/Common';
 import { PageLayout } from './layouts/PageLayout';
 
 export default function App() {
   return (
     <PageLayout>
       <header className={cx(headerStyle)}>head</header>
-      <div className={cx(bodyStyle)}>
+      <Flex as="div" direction="row" className={cx(bodyStyle)}>
         <nav className={cx(navStyle)}>
           <menu>
             <li>
@@ -23,7 +24,7 @@ export default function App() {
         <main className={mainStyle}>
           <Outlet></Outlet>
         </main>
-      </div>
+      </Flex>
       <footer className={cx(footerStyle)}>footer</footer>
     </PageLayout>
   );
@@ -31,8 +32,6 @@ export default function App() {
 
 const mainStyle = css({
   flexGrow: 1,
-  display: 'flex',
-  flexDirection: 'row',
   height: 'full'
 });
 
@@ -42,9 +41,9 @@ const bodyStyle = css({
 });
 
 const navStyle = css({
-  float: 'left',
   width: 20,
-  height: 'full'
+  height: 'full',
+  flexShrink: 0
 });
 
 const headerStyle = css({
