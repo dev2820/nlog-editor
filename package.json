@@ -21,12 +21,13 @@
     "build:linux": "electron-vite build && electron-builder --linux --config"
   },
   "dependencies": {
-    "@blocknote/core": "^0.9.6",
-    "@blocknote/react": "^0.9.6",
+    "@blocknote/core": "^0.10.1",
+    "@blocknote/react": "^0.10.1",
     "@electron-toolkit/preload": "^2.0.0",
     "@electron-toolkit/utils": "^2.0.1",
     "dayjs": "^1.11.10",
     "gray-matter": "^4.0.3",
+    "react-feather": "^2.0.10",
     "react-router-dom": "^6.21.1"
   },
   "devDependencies": {
