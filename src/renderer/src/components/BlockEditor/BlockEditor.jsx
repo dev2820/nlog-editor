@@ -19,9 +19,9 @@ import { css, cx } from '@style/css';
 /**
  * TODO: 에디터 스타일링 찾아보기 BlockNote
  */
-const FontParagraphBlock = createReactBlockSpec(
+const CodeBlock = createReactBlockSpec(
   {
-    type: 'fontParagraph',
+    type: 'codeBlock',
     propSchema: {
       ...defaultProps,
       lang: {
@@ -63,25 +63,25 @@ const FontParagraphBlock = createReactBlockSpec(
 
 const blockSchema = {
   ...defaultBlockSchema,
-  fontParagraph: FontParagraphBlock.config
+  codeBlock: CodeBlock.config
 };
 
 const blockSpecs = {
   ...defaultBlockSpecs,
-  fontParagraph: FontParagraphBlock
+  codeBlock: CodeBlock
 };
 
 // Creates a slash menu item for inserting a font paragraph block.
-const insertFontParagraph = {
-  name: 'Insert Font Paragraph',
-  hint: "Used to insert a block with 'Hello World' below.",
+const insertCodeBlock = {
+  name: 'Insert Code Block',
+  hint: 'Used to insert a code block',
   execute: (editor) => {
     editor.insertBlocks(
       [
         {
-          type: 'fontParagraph',
+          type: 'codeBlock',
           props: {
-            color: 'red' || undefined
+            lang: 'js' || undefined
           }
         }
       ],
@@ -89,14 +89,14 @@ const insertFontParagraph = {
       'after'
     );
   },
-  aliases: ['p', 'paragraph', 'font'],
-  group: 'Other',
+  aliases: ['code', 'cd'],
+  group: 'Code',
   icon: <Icon.Code size={18} />
 };
 
 const customSlashMenuItemList = [
   ...getDefaultReactSlashMenuItems(blockSchema),
-  insertFontParagraph
+  insertCodeBlock
 ];
 
 export function BlockEditor({
