@@ -8,7 +8,7 @@ declare global {
     electron: ElectronAPI;
     api: {
       setTitle: (title: string) => void;
-      savePost: (fileName: string, post: Post) => Promise<boolean>;
+      savePost: (fileName: string, post: Post) => Promise<Post>;
       fetchBasePath: () => Promise<string>;
       setBasePath: (basePath: string) => void;
       createPost: (title: string) => Promise<Post | null>;

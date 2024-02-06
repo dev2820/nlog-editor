@@ -1,4 +1,13 @@
-import { ChangeEvent, ComponentProps } from 'react';
+import {
+  ChangeEvent,
+  ComponentProps,
+  forwardRef,
+  useImperativeHandle,
+  useRef,
+  useState,
+  type ForwardedRef,
+  useEffect
+} from 'react';
 
 import dayjs from 'dayjs';
 
@@ -6,63 +15,71 @@ import { BlockEditor } from '@/components/BlockEditor';
 import { Flex, Input } from '@/components/Common';
 import { isNil } from '@/utils/type';
 import { css, cx } from '@style/css';
+import { Post } from '@type/post';
 
 import { TitleInput } from '../TitleInput';
 
 interface Props extends ComponentProps<'div'> {
-  /**
-   * Post에 대한 CRUD가 가능한 Context를 받는다.
-   */
-  title: string;
-  created: Date;
-  modified: Date;
-  content: string;
-  slug: string;
-  onUpdateTitle?: (newTitle: string) => void;
-  onUpdateCreated?: (newCreated: Date) => void;
-  onUpdateContent?: (newContent: string) => void;
-  onUpdateSlug?: (newSlug: string) => void;
+  initPost: Post;
 }
 
-export function PostEditor({
-  title,
-  created,
-  modified,
-  content,
-  slug,
-  className,
-  onUpdateContent,
-  onUpdateCreated,
-  onUpdateTitle,
-  onUpdateSlug,
-  ...props
-}: Props) {
-  function handleEditorContentChange(newContent: string): void {
-    if (isNil(onUpdateContent)) return;
+export interface Reference {
+  getContent: () => Promise<string>;
+  getMeta: () => {
+    title: string;
+    created: Date;
+    modified: Date;
+    slug: string;
+  };
+}
 
-    onUpdateContent(newContent);
-  }
+function _PostEditor(
+  { initPost, className, ...props }: Props,
+  ref: ForwardedRef<Reference>
+) {
+  const [post, setPost] = useState<Post>(initPost);
+  const editorRef = useRef<HTMLDivElement & { getMarkdown: () => string }>(
+    null
+  );
+
+  useEffect(() => {
+    setPost(initPost);
+  }, [initPost]);
 
   function handleTitleChange(evt: ChangeEvent<HTMLInputElement>) {
-    if (isNil(onUpdateTitle)) return;
-
     const newTitle = evt.target.value;
-    onUpdateTitle(newTitle);
+    setPost({ ...post, title: newTitle });
   }
 
   function handleCreatedChange(evt: ChangeEvent<HTMLInputElement>) {
-    if (isNil(onUpdateCreated)) return;
-
     const newCreated = new Date(evt.target.value);
-    onUpdateCreated(newCreated);
+    setPost({ ...post, created: newCreated });
   }
 
   function handleSlugChange(evt: ChangeEvent<HTMLInputElement>) {
-    if (isNil(onUpdateSlug)) return;
-
     const newSlug = evt.target.value;
-    onUpdateSlug(newSlug);
+    setPost({ ...post, slug: newSlug });
   }
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      async getContent() {
+        const ref = editorRef.current;
+        if (isNil(ref)) {
+          return Promise.resolve('');
+        }
+        return ref.getMarkdown();
+      },
+      getMeta() {
+        return {
+          ...post,
+          modified: new Date()
+        };
+      }
+    }),
+    []
+  );
 
   return (
     <div {...props} className={cx(className, style)}>
@@ -73,7 +90,7 @@ export function PostEditor({
         className={metaAreaStyle}
       >
         <TitleInput
-          value={title}
+          value={post.title}
           onChange={handleTitleChange}
           className={titleInputStyle}
         ></TitleInput>
@@ -81,7 +98,9 @@ export function PostEditor({
           created:
           <Input
             type="datetime-local"
-            value={dayjs(created.toISOString()).format('YYYY-MM-DDTHH:mm:ss')}
+            value={dayjs(post.created.toISOString()).format(
+              'YYYY-MM-DDTHH:mm:ss'
+            )}
             onChange={handleCreatedChange}
           ></Input>
         </label>
@@ -89,22 +108,27 @@ export function PostEditor({
           modified:
           <Input
             type="datetime-local"
-            value={dayjs(modified.toISOString()).format('YYYY-MM-DDTHH:mm:ss')}
+            value={dayjs(post.modified.toISOString()).format(
+              'YYYY-MM-DDTHH:mm:ss'
+            )}
             readOnly
           ></Input>
         </label>
         <label>
           slug:
-          <Input type="text" value={slug} onChange={handleSlugChange}></Input>
+          <Input
+            type="text"
+            value={post.slug}
+            onChange={handleSlugChange}
+          ></Input>
         </label>
       </Flex>
-      <BlockEditor
-        onChangeContent={handleEditorContentChange}
-        initMarkdown={content}
-      ></BlockEditor>
+      <BlockEditor initMarkdown={post.content} ref={editorRef}></BlockEditor>
     </div>
   );
 }
+
+export const PostEditor = forwardRef<Reference, Props>(_PostEditor);
 
 const style = css({
   overflow: 'auto'

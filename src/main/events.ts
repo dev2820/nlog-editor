@@ -34,9 +34,9 @@ ${post.content}
 `.trim()
     );
 
-    return true;
+    return post;
   } catch (err) {
-    return false;
+    return null;
   }
 }
 

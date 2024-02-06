@@ -1,6 +1,6 @@
 import '@blocknote/core/style.css';
 
-import { useEffect } from 'react';
+import { useEffect, forwardRef, useImperativeHandle } from 'react';
 
 import {
   defaultProps,
@@ -15,7 +15,10 @@ import {
 } from '@blocknote/react';
 import * as Icon from 'react-feather';
 
+import { CodeEditor } from '@/components/CodeEditor';
+import { isNil } from '@/utils/type';
 import { css, cx } from '@style/css';
+
 /**
  * TODO: 에디터 스타일링 찾아보기 BlockNote
  */
@@ -26,36 +29,41 @@ const CodeBlock = createReactBlockSpec(
       ...defaultProps,
       lang: {
         default: 'js'
+      },
+      code: {
+        default: ''
       }
     },
     content: 'none'
   },
   {
     render: ({ block, contentRef }) => {
-      const style = {
-        lang: block.props.lang
-      };
-      console.log(style);
+      const { lang, code } = block.props;
       return (
-        <pre ref={contentRef}>
-          <code>code here</code>
+        <CodeEditor
+          className="code-editor"
+          lang={lang}
+          initCode={code}
+          ref={contentRef}
+        ></CodeEditor>
+      );
+    },
+    toExternalHTML: ({ block, contentRef }) => {
+      const blockId = block.id;
+      const $code = document.querySelector(
+        `[data-id="${blockId}"] .code-editor`
+      );
+
+      return (
+        <pre ref={contentRef} data-code={$code.dataset['code']}>
+          <code>{$code.dataset['code']}</code>
         </pre>
       );
     },
-    toExternalHTML: ({ contentRef }) => (
-      <pre ref={contentRef}>
-        <code>code here</code>
-      </pre>
-    ),
     parse: (element) => {
-      const font = element.style.fontFamily;
-
-      if (font === '') {
-        return;
-      }
-
       return {
-        font: font || undefined
+        code: element.querySelector('code').textContent,
+        lang: 'js'
       };
     }
   }
@@ -71,7 +79,6 @@ const blockSpecs = {
   codeBlock: CodeBlock
 };
 
-// Creates a slash menu item for inserting a font paragraph block.
 const insertCodeBlock = {
   name: 'Insert Code Block',
   hint: 'Used to insert a code block',
@@ -81,7 +88,10 @@ const insertCodeBlock = {
         {
           type: 'codeBlock',
           props: {
-            lang: 'js' || undefined
+            lang: 'js',
+            code: `function abc() {
+  console.log('hello world')
+}`
           }
         }
       ],
@@ -98,14 +108,30 @@ const customSlashMenuItemList = [
   ...getDefaultReactSlashMenuItems(blockSchema),
   insertCodeBlock
 ];
+/**
+ * TODO: useImperativeHandle 사용해서 extract 하는 함수를 만들 것
+ */
+function _BlockEditor(
+  { initMarkdown, onChangeContent, className, ...props },
+  ref
+) {
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        async getMarkdown() {
+          const markdown = await editor.blocksToMarkdownLossy(
+            editor.topLevelBlocks
+          );
+          return markdown;
+        }
+      };
+    },
+    []
+  );
 
-export function BlockEditor({
-  initMarkdown,
-  onChangeContent,
-  className,
-  ...props
-}) {
   async function handleEditorContentChange(editor) {
+    if (isNil(onChangeContent)) return;
     const markdown = await editor.blocksToMarkdownLossy(editor.topLevelBlocks);
     onChangeContent(markdown);
   }
@@ -135,6 +161,8 @@ export function BlockEditor({
     </div>
   );
 }
+
+export const BlockEditor = forwardRef(_BlockEditor);
 
 const style = css({
   width: 'full',

@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 
 import { Link, useParams } from 'react-router-dom';
 
@@ -6,8 +6,12 @@ import { Button, Flex, Input } from '@/components/Common';
 import { isNil } from '@/utils/type';
 import { css, cx } from '@style/css';
 import { File } from '@type/file';
+import { Post } from '@type/post';
 
-import { PostEditor } from './components/PostEditor';
+import {
+  PostEditor,
+  type Reference as PostEditorReference
+} from './components/PostEditor';
 
 /**
  * TODO: 포스트 리스트를 클릭시 로드하는 기능 추가
@@ -15,16 +19,17 @@ import { PostEditor } from './components/PostEditor';
 export function PostEditorPage() {
   const { id } = useParams();
   const [newPostTitle, setNewPostTitle] = useState('');
-  const [postName, setPostName] = useState<string>('');
-  const [title, setTitle] = useState<string>('');
-  const [created, setCreated] = useState<Date>(new Date(0));
-  const [modified, setModified] = useState<Date>(new Date(0));
-  const [content, setContent] = useState<string>('');
-  const [initContent, setInitContent] = useState<string>('');
-  const [slug, setSlug] = useState<string>('');
+  const [post, setPost] = useState<Post>({
+    title: '',
+    created: new Date(),
+    modified: new Date(),
+    content: '',
+    slug: ''
+  });
   const [files, setFiles] = useState<File<'post' | 'image'>[]>([]);
+  const editorRef = useRef<PostEditorReference>(null);
 
-  function handleChangeTitle(evt: ChangeEvent<HTMLInputElement>) {
+  function handleNewPostTitleChange(evt: ChangeEvent<HTMLInputElement>) {
     const title = evt.target.value;
     setNewPostTitle(title);
   }
@@ -32,59 +37,38 @@ export function PostEditorPage() {
   async function handleCreateNewPost() {
     const newPost = await window.api.createPost(newPostTitle);
     if (isNil(newPost)) return;
-    setPostName(newPost.title);
-    setTitle(newPost.title);
-    setCreated(new Date(newPost.created));
-    setModified(new Date(newPost.modified));
-    setContent(newPost.content);
-    setInitContent(newPost.content);
-    setSlug(newPost.title);
+
+    setPost(newPost);
     setNewPostTitle('');
     updateFiles();
   }
 
-  function handleUpdateContent(newContent: string) {
-    setContent(newContent);
-  }
-  function handleUpdateTitle(newTitle: string) {
-    setTitle(newTitle);
-  }
-  function handleUpdateCreated(newCreated: Date) {
-    setCreated(newCreated);
-  }
-  function handleUpdateSlug(newSlug: string) {
-    setSlug(newSlug);
-  }
-
   async function handleLoadPost(postName: string) {
-    const post = await window.api.loadPost(postName);
-    if (isNil(post)) return;
-    setPostName(post.title);
-    setTitle(post.title);
-    setCreated(new Date(post.created));
-    setModified(new Date(post.modified));
-    setSlug(post.slug);
-    setInitContent(post.content);
-    setContent(post.content);
+    const loadedPost = await window.api.loadPost(postName);
+    if (isNil(loadedPost)) return;
+
+    setPost(loadedPost);
   }
 
   async function handleSavePost() {
-    const isSuccess = await window.api.savePost(postName, {
-      title,
-      created,
-      modified,
-      content,
-      slug
-    });
-    if (isSuccess) {
-      alert('저장되었습니다.');
+    if (isNil(id)) return;
+    if (isNil(editorRef.current)) return;
 
-      updateFiles();
-    } else {
+    const content = await editorRef.current.getContent();
+    const meta = editorRef.current.getMeta();
+    const updatedPost = {
+      ...meta,
+      content
+    };
+
+    const maybePost = await window.api.savePost(id, updatedPost);
+
+    if (Object.is(maybePost, null)) {
       alert('저장에 실패했습니다.');
     }
-    setModified(new Date());
-    setInitContent(content);
+
+    alert('저장되었습니다.');
+    updateFiles();
   }
 
   async function updateFiles() {
@@ -101,11 +85,12 @@ export function PostEditorPage() {
 
     handleLoadPost(id);
   }, [id]);
-
+  //TODO: expose 이용해서 Link 이동하기 전에 현재 코드 저장하기 기능 구현
+  console.log(post);
   return (
     <Flex direction="row" className={style}>
       <aside className={cx(explorerStyle)}>
-        <Input value={newPostTitle} onChange={handleChangeTitle}></Input>
+        <Input value={newPostTitle} onChange={handleNewPostTitleChange}></Input>
         <Button onClick={handleCreateNewPost}>새 글쓰기</Button>
         {files.map((file) => (
           <li key={file.fileName}>
@@ -124,16 +109,9 @@ export function PostEditorPage() {
         )}
       >
         <PostEditor
-          title={title}
-          created={created}
-          modified={modified}
-          content={initContent}
-          slug={slug}
-          onUpdateContent={handleUpdateContent}
-          onUpdateTitle={handleUpdateTitle}
-          onUpdateCreated={handleUpdateCreated}
-          onUpdateSlug={handleUpdateSlug}
+          initPost={post}
           className={editorLayout}
+          ref={editorRef}
         ></PostEditor>
         <Button onClick={handleSavePost}>저장하기</Button>
       </Flex>

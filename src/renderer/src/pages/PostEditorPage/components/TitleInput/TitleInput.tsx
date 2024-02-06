@@ -4,11 +4,14 @@ import { css, cx } from '@style/css';
 
 interface Props extends ComponentProps<'input'> {}
 
-export function TitleInput({ className, ...props }: Props) {
+export function TitleInput({ className, value, ...props }: Props) {
+  console.log(value);
+
   return (
     <input
       placeholder="제목을 입력해주세요"
       className={cx(style, boxStyle, className)}
+      value={value}
       {...props}
     ></input>
   );
