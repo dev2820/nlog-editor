@@ -52,15 +52,16 @@ export function PostEditorPage() {
 
   async function handleSavePost() {
     if (isNil(id)) return;
-    if (isNil(editorRef.current)) return;
 
-    const content = await editorRef.current.getContent();
-    const meta = editorRef.current.getMeta();
+    const $editor = editorRef.current;
+    if (isNil($editor)) return;
+
+    const content = await $editor.getContent();
+    const meta = await $editor.getMeta();
     const updatedPost = {
       ...meta,
       content
     };
-
     const maybePost = await window.api.savePost(id, updatedPost);
 
     if (Object.is(maybePost, null)) {
@@ -68,6 +69,7 @@ export function PostEditorPage() {
     }
 
     alert('저장되었습니다.');
+    setPost(maybePost);
     updateFiles();
   }
 
@@ -86,7 +88,6 @@ export function PostEditorPage() {
     handleLoadPost(id);
   }, [id]);
   //TODO: expose 이용해서 Link 이동하기 전에 현재 코드 저장하기 기능 구현
-  console.log(post);
   return (
     <Flex direction="row" className={style}>
       <aside className={cx(explorerStyle)}>
