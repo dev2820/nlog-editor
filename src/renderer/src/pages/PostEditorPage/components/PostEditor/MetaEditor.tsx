@@ -16,50 +16,26 @@ import { Post } from '@type/post';
 
 import { TitleInput } from '../TitleInput';
 
-type Meta = {
-  title: Post['title'];
-  created: Post['created'];
-  modified: Post['modified'];
-  slug: Post['slug'];
-};
-
-type Props = Meta;
+type Meta = Omit<Post, 'content'>;
+type Props = { initMeta: Meta };
 
 export interface Reference {
   getMeta: () => Promise<Meta>;
 }
 
 function _MetaEditor(
-  { title, created, modified, slug, ...props }: Props,
+  { initMeta, ...props }: Props,
   ref: ForwardedRef<Reference>
 ) {
-  const exposableMeta = useRef({
-    title: '',
-    created: new Date(0),
-    modified: new Date(0),
-    slug: ''
-  });
-  const [meta, setMeta] = useState<Meta>({
-    title,
-    created,
-    modified,
-    slug
-  });
+  const exposableMeta = useRef({ ...initMeta });
+  const [meta, setMeta] = useState<Meta>(initMeta);
 
   useEffect(() => {
-    setMeta({
-      title,
-      created,
-      modified,
-      slug
-    });
+    setMeta(initMeta);
     exposableMeta.current = {
-      title,
-      created,
-      modified,
-      slug
+      ...initMeta
     };
-  }, [title, created, modified, slug]);
+  }, [initMeta]);
 
   function handleTitleChange(evt: ChangeEvent<HTMLInputElement>) {
     const newTitle = evt.target.value;

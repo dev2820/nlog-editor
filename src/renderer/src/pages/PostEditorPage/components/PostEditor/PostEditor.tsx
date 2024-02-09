@@ -74,10 +74,12 @@ function _PostEditor(
   return (
     <div {...props} className={cx(className, style)}>
       <MetaEditor
-        title={post.title}
-        created={post.created}
-        modified={post.modified}
-        slug={post.slug}
+        initMeta={{
+          title: post.title,
+          created: post.created,
+          modified: post.modified,
+          slug: post.slug
+        }}
         ref={metaEditorRef}
       ></MetaEditor>
       <BlockEditor initMarkdown={post.content} ref={editorRef}></BlockEditor>
