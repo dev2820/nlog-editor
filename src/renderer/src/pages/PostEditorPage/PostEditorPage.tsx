@@ -46,8 +46,12 @@ export function PostEditorPage() {
   async function handleLoadPost(postName: string) {
     const loadedPost = await window.api.loadPost(postName);
     if (isNil(loadedPost)) return;
-
-    setPost(loadedPost);
+    // TODO: loadPost를 위한 어뎁터 추가하기
+    setPost({
+      ...loadedPost,
+      created: new Date(loadedPost.created),
+      modified: new Date(loadedPost.modified)
+    });
   }
 
   async function handleSavePost() {
