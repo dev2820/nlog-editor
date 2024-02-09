@@ -14,6 +14,7 @@ import {
   createReactBlockSpec
 } from '@blocknote/react';
 import * as Icon from 'react-feather';
+import TurndownService from 'turndown';
 
 import { CodeEditor } from '@/components/CodeEditor';
 import { isNil } from '@/utils/type';
@@ -22,6 +23,13 @@ import { css, cx } from '@style/css';
 /**
  * TODO: 에디터 스타일링 찾아보기 BlockNote
  */
+const turndownService = new TurndownService({
+  headingStyle: 'atx',
+  fence: '```',
+  linkStyle: 'inlined',
+  codeBlockStyle: 'fenced'
+});
+
 const CodeBlock = createReactBlockSpec(
   {
     type: 'codeBlock',
@@ -56,15 +64,26 @@ const CodeBlock = createReactBlockSpec(
 
       return (
         <pre ref={contentRef} data-code={$code.dataset['code']}>
-          <code>{$code.dataset['code']}</code>
+          <code className={`language-${block.props.lang}`}>
+            {$code.dataset['code']}
+          </code>
         </pre>
       );
     },
     parse: (element) => {
-      return {
-        code: element.querySelector('code').textContent,
-        lang: 'js'
-      };
+      if (element.tagName === 'PRE') {
+        const $code = element.querySelector('code');
+        if (isNil($code)) return undefined;
+
+        const code = $code.textContent;
+        const lang = $code.dataset['language'];
+
+        return {
+          code,
+          lang
+        };
+      }
+      return undefined;
     }
   }
 );
@@ -120,9 +139,8 @@ function _BlockEditor(
     () => {
       return {
         async getMarkdown() {
-          const markdown = await editor.blocksToMarkdownLossy(
-            editor.topLevelBlocks
-          );
+          const html = await editor.blocksToHTMLLossy(editor.topLevelBlocks);
+          const markdown = turndownService.turndown(html);
           return markdown;
         }
       };
@@ -149,6 +167,7 @@ function _BlockEditor(
     if (editor) {
       const getBlocks = async () => {
         const blocks = await editor.tryParseMarkdownToBlocks(initMarkdown);
+
         editor.replaceBlocks(editor.topLevelBlocks, blocks);
       };
       getBlocks();

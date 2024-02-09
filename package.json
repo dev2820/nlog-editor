@@ -32,7 +32,8 @@
     "dayjs": "^1.11.10",
     "gray-matter": "^4.0.3",
     "react-feather": "^2.0.10",
-    "react-router-dom": "^6.21.1"
+    "react-router-dom": "^6.21.1",
+    "turndown": "^7.1.2"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^1.0.1",
