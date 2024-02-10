@@ -15,19 +15,20 @@ import {
   type Reference as PostEditorReference
 } from './components/PostEditor';
 
+const initPost = {
+  title: '',
+  created: new Date(),
+  modified: new Date(),
+  content: '',
+  slug: ''
+};
 /**
  * TODO: 포스트 리스트를 클릭시 로드하는 기능 추가
  */
 export function PostEditorPage() {
   const { id } = useParams();
   const [newPostTitle, setNewPostTitle] = useState('');
-  const [post, setPost] = useState<Post>({
-    title: '',
-    created: new Date(),
-    modified: new Date(),
-    content: '',
-    slug: ''
-  });
+  const [post, setPost] = useState<Post>(initPost);
   const [files, setFiles] = useState<File<'post' | 'image'>[]>([]);
   const editorRef = useRef<PostEditorReference>(null);
 
