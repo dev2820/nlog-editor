@@ -22,9 +22,7 @@ const initPost = {
   content: '',
   slug: ''
 };
-/**
- * TODO: 포스트 리스트를 클릭시 로드하는 기능 추가
- */
+
 export function PostEditorPage() {
   const { id } = useParams();
   const [newPostTitle, setNewPostTitle] = useState('');
