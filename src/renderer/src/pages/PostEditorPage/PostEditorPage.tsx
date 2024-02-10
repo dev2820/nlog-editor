@@ -1,8 +1,8 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
-import { Button, Flex, Input } from '@/components/Common';
+import { Button, Flex, Input, NavLink } from '@/components/Common';
 import { FileSchema } from '@/requests/FileSchema';
 import { PostSchema } from '@/requests/PostSchema';
 import { isError, isNil } from '@/utils/type';
@@ -95,7 +95,7 @@ export function PostEditorPage() {
 
     handleLoadPost(id);
   }, [id]);
-  //TODO: expose 이용해서 Link 이동하기 전에 현재 코드 저장하기 기능 구현
+
   return (
     <Flex direction="row" className={style}>
       <aside className={cx(explorerStyle)}>
@@ -103,7 +103,7 @@ export function PostEditorPage() {
         <Button onClick={handleCreateNewPost}>새 글쓰기</Button>
         {files.map((file) => (
           <li key={file.fileName}>
-            <Link to={`/editor/${file.fileName}`}>{file.fileName}</Link>
+            <NavLink to={`/editor/${file.fileName}`}>{file.fileName}</NavLink>
           </li>
         ))}
       </aside>
