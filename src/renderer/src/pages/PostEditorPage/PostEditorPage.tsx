@@ -3,10 +3,11 @@ import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import { Button, Flex, Input } from '@/components/Common';
-import { isNil } from '@/utils/type';
+import { PostSchema } from '@/requests/PostSchema';
+import { isError, isNil } from '@/utils/type';
 import { css, cx } from '@style/css';
-import { File } from '@type/file';
-import { Post } from '@type/post';
+import { type File } from '@type/file';
+import { type Post } from '@type/post';
 
 import {
   PostEditor,
@@ -44,9 +45,9 @@ export function PostEditorPage() {
   }
 
   async function handleLoadPost(postName: string) {
-    const loadedPost = await window.api.loadPost(postName);
-    if (isNil(loadedPost)) return;
-    // TODO: loadPost를 위한 어뎁터 추가하기
+    const loadedPost = await PostSchema.loadPost(postName);
+    if (isError(loadedPost)) return;
+
     setPost({
       ...loadedPost,
       created: new Date(loadedPost.created),
