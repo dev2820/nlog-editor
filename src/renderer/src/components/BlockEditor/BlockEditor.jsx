@@ -33,9 +33,7 @@ const customSlashMenuItemList = [
   ...getDefaultReactSlashMenuItems(blockSchema),
   insertCodeBlock
 ];
-/**
- * TODO: useImperativeHandle 사용해서 extract 하는 함수를 만들 것
- */
+
 function _BlockEditor(
   { initMarkdown, onChangeContent, className, ...props },
   ref
