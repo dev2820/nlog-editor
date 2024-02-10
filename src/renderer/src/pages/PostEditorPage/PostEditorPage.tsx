@@ -36,8 +36,8 @@ export function PostEditorPage() {
   }
 
   async function handleCreateNewPost() {
-    const newPost = await window.api.createPost(newPostTitle);
-    if (isNil(newPost)) return;
+    const newPost = await PostSchema.createPost(newPostTitle);
+    if (isError(newPost)) return;
 
     setPost(newPost);
     setNewPostTitle('');
