@@ -3,6 +3,7 @@ import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import { Button, Flex, Input } from '@/components/Common';
+import { FileSchema } from '@/requests/FileSchema';
 import { PostSchema } from '@/requests/PostSchema';
 import { isError, isNil } from '@/utils/type';
 import { css, cx } from '@style/css';
@@ -80,7 +81,9 @@ export function PostEditorPage() {
   }
 
   async function updateFiles() {
-    const files = await window.api.fetchFileStructure();
+    const files = await FileSchema.fetchFileStructure();
+    if (isError(files)) return;
+
     setFiles(files);
   }
 
