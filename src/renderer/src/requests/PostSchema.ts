@@ -36,4 +36,24 @@ export class PostSchema {
       return Error(String(err));
     }
   }
+  static async savePost(
+    postId: string,
+    updatedPost: Post
+  ): Promise<Post | Error> {
+    try {
+      const result = await window.api.savePost(postId, updatedPost);
+      if (isNil(result)) {
+        throw Error(`failed to update post: ${postId}`);
+      }
+
+      return result;
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err.message);
+        return err;
+      }
+
+      return Error(String(err));
+    }
+  }
 }

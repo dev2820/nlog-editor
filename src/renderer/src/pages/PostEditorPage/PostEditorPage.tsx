@@ -67,10 +67,11 @@ export function PostEditorPage() {
       ...meta,
       content
     };
-    const maybePost = await window.api.savePost(id, updatedPost);
+    const maybePost = await PostSchema.savePost(id, updatedPost);
 
-    if (Object.is(maybePost, null)) {
+    if (isError(maybePost)) {
       alert('저장에 실패했습니다.');
+      return;
     }
 
     alert('저장되었습니다.');
