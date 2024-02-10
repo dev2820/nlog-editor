@@ -40,18 +40,6 @@ code {
   font-size: 85%;
 }
 
-a {
-  color: #9feaf9;
-  font-weight: 600;
-  cursor: pointer;
-  text-decoration: none;
-  outline: none;
-}
-
-a:hover {
-  border-bottom: 1px solid;
-}
-
 .container {
   flex: 1;
   display: flex;

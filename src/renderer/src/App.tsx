@@ -1,9 +1,9 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
 import './assets/index.css';
 import { css, cx } from '@style/css';
 
-import { Flex } from './components/Common';
+import { Flex, NavLink } from './components/Common';
 import { PageLayout } from './layouts/PageLayout';
 
 export default function App() {
@@ -14,10 +14,10 @@ export default function App() {
         <nav className={cx(navStyle)}>
           <menu>
             <li>
-              <Link to={'/editor'}>에디터</Link>
+              <NavLink to={'/editor'}>에디터</NavLink>
             </li>
             <li>
-              <Link to={'/setting'}>세팅</Link>
+              <NavLink to={'/setting'}>세팅</NavLink>
             </li>
           </menu>
         </nav>
