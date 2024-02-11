@@ -1,7 +1,7 @@
 import { join } from 'path';
 
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
-import { app, shell, BrowserWindow, ipcMain } from 'electron';
+import { app, shell, protocol, BrowserWindow, ipcMain, net } from 'electron';
 
 import {
   handleSetTitle,
@@ -13,6 +13,18 @@ import {
   loadPost
 } from './events';
 import store from './store';
+
+protocol.registerSchemesAsPrivileged([
+  {
+    scheme: 'media',
+    privileges: {
+      // standard: true, localStorage 등의 접근에 필요
+      secure: true,
+      supportFetchAPI: true,
+      bypassCSP: true
+    }
+  }
+]);
 
 function createWindow(): void {
   const size = store.get('windowSize') as { width: number; height: number };
@@ -63,6 +75,11 @@ app.whenReady().then(() => {
   ipcMain.handle('create-post', createPost);
   ipcMain.handle('fetch-file-structure', fetchFileStructure);
   ipcMain.handle('load-post', loadPost);
+
+  protocol.handle('media', (req) => {
+    const pathToMedia = new URL(req.url).pathname;
+    return net.fetch(`file://${pathToMedia}`);
+  });
 
   createWindow();
 

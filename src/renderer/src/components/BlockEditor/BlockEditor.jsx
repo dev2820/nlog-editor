@@ -64,6 +64,11 @@ function _BlockEditor(
 
     onEditorContentChange: (editor) => {
       handleEditorContentChange(editor);
+    },
+
+    uploadFile: (file) => {
+      // TODO: 이미지 파일을 지정 위치에 저장하기
+      return `media://${file.path}`;
     }
   });
 

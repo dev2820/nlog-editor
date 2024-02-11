@@ -1,5 +1,7 @@
 import TurndownService from 'turndown';
 
+import { getFilenameFromUrl } from '@/utils/url';
+
 /**
  * FIXME: table에 대해 동작에 이상동작을 함
  *
@@ -16,6 +18,21 @@ const turndownService = new TurndownService({
   fence: '```',
   linkStyle: 'inlined',
   codeBlockStyle: 'fenced'
+});
+
+turndownService.addRule('image', {
+  filter: ['img'],
+  replacement(_: never, node: HTMLImageElement) {
+    const urlToImage = new URL(node.src);
+    const filename = getFilenameFromUrl(node.src);
+
+    if (urlToImage.protocol === 'media:') {
+      // TODO: media 프로토콜 상수화하여 이용할 것
+      return `![${filename}](./${filename})`;
+    }
+
+    return `![${filename}](${node.src})`;
+  }
 });
 
 export function htmlToMarkdown(html: string) {
