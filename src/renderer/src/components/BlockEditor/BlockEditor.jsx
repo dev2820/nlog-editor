@@ -9,6 +9,7 @@ import {
   getDefaultReactSlashMenuItems
 } from '@blocknote/react';
 
+import { omit } from '@/utils/omit';
 import { isNil } from '@/utils/type';
 import { css, cx } from '@style/css';
 
@@ -20,12 +21,11 @@ import { htmlToMarkdown } from './htmlToMarkdown';
  */
 
 const blockSchema = {
-  ...defaultBlockSchema,
+  ...omit(defaultBlockSchema, 'table'),
   codeBlock: CodeBlock.config
 };
-
 const blockSpecs = {
-  ...defaultBlockSpecs,
+  ...omit(defaultBlockSpecs, 'table'),
   codeBlock: CodeBlock
 };
 

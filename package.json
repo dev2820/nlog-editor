@@ -31,6 +31,7 @@
     "codemirror": "^6.0.1",
     "dayjs": "^1.11.10",
     "gray-matter": "^4.0.3",
+    "lodash-es": "^4.17.21",
     "react-feather": "^2.0.10",
     "react-router-dom": "^6.21.1",
     "turndown": "^7.1.2"
