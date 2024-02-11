@@ -5,6 +5,9 @@ import { EnvSchema } from '@/requests/EnvSchema';
 import { isError } from '@/utils/type';
 import { css } from '@style/css';
 
+/**
+ * TODO: basePath 저장시 alert 추가
+ */
 const PLZ_WRITE_FILE_PATH = '탐색기가 기준삼을 경로를 입력해주세요';
 
 export function SettingPage() {

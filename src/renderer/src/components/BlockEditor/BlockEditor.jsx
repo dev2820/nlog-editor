@@ -18,7 +18,8 @@ import { CodeBlock, insertCodeBlock } from './CodeBlock';
 import { htmlToMarkdown } from './htmlToMarkdown';
 import { markdownToHtml } from './markdownToHtml';
 /**
- * TODO: 에디터 스타일링 찾아보기 BlockNote
+ * TODO: 에디터 테마 커스텀 찾아보기 BlockNote
+ * TODO: table 컴포넌트 만들기
  */
 
 const blockSchema = {

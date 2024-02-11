@@ -92,7 +92,6 @@ export function PostEditorPage() {
     if (isError(maybeBasePath)) return;
 
     // TODO: 브라우저에서 path.join할 수 있는 더 좋은 솔루션을 찾아보자
-    // TODO: id가 비어있는 경우를 해결해야한다.
     const postPath = new URL(id ?? '', 'none://' + maybeBasePath + '/')
       .pathname;
     setPostPath(postPath);
@@ -108,6 +107,9 @@ export function PostEditorPage() {
     handleLoadPost(id);
     loadPostPath();
   }, [id]);
+  /**
+   * TODO: postPath 전역상태로 변환 (recoil?)
+   */
 
   return (
     <Flex direction="row" className={style}>

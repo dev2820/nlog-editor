@@ -18,7 +18,6 @@ import {
   type Reference as MetaEditorReference
 } from './MetaEditor';
 
-// TODO: postPath항목을 Post에 추가해 확장하고 전달하기 (우선은 임시로 id 전달)
 interface Props extends ComponentProps<'div'> {
   postPath: string;
   initPost: Post;

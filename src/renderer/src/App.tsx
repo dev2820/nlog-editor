@@ -6,6 +6,13 @@ import { css, cx } from '@style/css';
 import { Flex, NavLink } from './components/Common';
 import { PageLayout } from './layouts/PageLayout';
 
+/**
+ * TODO: test-post 확장하기
+ * TODO: 테마 정하기
+ * TODO: 파일 목록에 이미지도 볼 수 있게 하기
+ * TODO: Post에 author 추가 (SettingPage에도)
+ */
+
 export default function App() {
   return (
     <PageLayout>
