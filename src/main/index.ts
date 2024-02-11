@@ -18,7 +18,6 @@ protocol.registerSchemesAsPrivileged([
   {
     scheme: 'media',
     privileges: {
-      // standard: true, localStorage 등의 접근에 필요
       secure: true,
       supportFetchAPI: true,
       bypassCSP: true
