@@ -92,20 +92,22 @@ export function PostEditorPage() {
     if (isError(maybeBasePath)) return;
 
     // TODO: 브라우저에서 path.join할 수 있는 더 좋은 솔루션을 찾아보자
+    // TODO: id가 비어있는 경우를 해결해야한다.
     const postPath = new URL(id ?? '', 'none://' + maybeBasePath + '/')
       .pathname;
+    console.log(postPath);
     setPostPath(postPath);
   }
 
   useEffect(() => {
     updateFiles();
-    loadPostPath();
   }, []);
 
   useEffect(() => {
     if (isNil(id)) return;
 
     handleLoadPost(id);
+    loadPostPath();
   }, [id]);
 
   return (
