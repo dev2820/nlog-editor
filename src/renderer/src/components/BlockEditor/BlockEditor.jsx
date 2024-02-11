@@ -13,10 +13,10 @@ import { omit } from '@/utils/omit';
 import { isNil } from '@/utils/type';
 import { css, cx } from '@style/css';
 
+import { blockTraverse } from './blockTraverse';
 import { CodeBlock, insertCodeBlock } from './CodeBlock';
 import { htmlToMarkdown } from './htmlToMarkdown';
 import { markdownToHtml } from './markdownToHtml';
-
 /**
  * TODO: 에디터 스타일링 찾아보기 BlockNote
  */
@@ -36,7 +36,7 @@ const customSlashMenuItemList = [
 ];
 
 function _BlockEditor(
-  { initMarkdown, onChangeContent, className, ...props },
+  { initMarkdown, postPath, onChangeContent, className, ...props },
   ref
 ) {
   useImperativeHandle(
@@ -78,6 +78,18 @@ function _BlockEditor(
       const getBlocks = async () => {
         const html = await markdownToHtml(initMarkdown);
         const blocks = await editor.tryParseHTMLToBlocks(html);
+        blockTraverse(
+          blocks,
+          (block) => {
+            const fullPath = new URL(block.props.url, 'media:' + postPath + '/')
+              .href;
+            block.props.url = fullPath;
+          },
+          {
+            recursive: true,
+            onlyType: ['image']
+          }
+        );
         editor.replaceBlocks(editor.topLevelBlocks, blocks);
       };
       getBlocks();

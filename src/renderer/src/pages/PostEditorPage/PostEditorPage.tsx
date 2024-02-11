@@ -3,6 +3,7 @@ import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Button, Flex, Input, NavLink } from '@/components/Common';
+import { EnvSchema } from '@/requests/EnvSchema';
 import { FileSchema } from '@/requests/FileSchema';
 import { PostSchema } from '@/requests/PostSchema';
 import { isError, isNil } from '@/utils/type';
@@ -29,6 +30,7 @@ export function PostEditorPage() {
   const [post, setPost] = useState<Post>(initPost);
   const [files, setFiles] = useState<File<'post' | 'image'>[]>([]);
   const editorRef = useRef<PostEditorReference>(null);
+  const [postPath, setPostPath] = useState<string>('');
 
   function handleNewPostTitleChange(evt: ChangeEvent<HTMLInputElement>) {
     const title = evt.target.value;
@@ -85,9 +87,19 @@ export function PostEditorPage() {
 
     setFiles(files);
   }
+  async function loadPostPath() {
+    const maybeBasePath = await EnvSchema.fetchBasePath();
+    if (isError(maybeBasePath)) return;
+
+    // TODO: 브라우저에서 path.join할 수 있는 더 좋은 솔루션을 찾아보자
+    const postPath = new URL(id ?? '', 'none://' + maybeBasePath + '/')
+      .pathname;
+    setPostPath(postPath);
+  }
 
   useEffect(() => {
     updateFiles();
+    loadPostPath();
   }, []);
 
   useEffect(() => {
@@ -118,6 +130,7 @@ export function PostEditorPage() {
         )}
       >
         <PostEditor
+          postPath={postPath}
           initPost={post}
           className={editorLayout}
           ref={editorRef}

@@ -18,7 +18,9 @@ import {
   type Reference as MetaEditorReference
 } from './MetaEditor';
 
+// TODO: postPath항목을 Post에 추가해 확장하고 전달하기 (우선은 임시로 id 전달)
 interface Props extends ComponentProps<'div'> {
+  postPath: string;
   initPost: Post;
 }
 
@@ -28,7 +30,7 @@ export interface Reference {
 }
 
 function _PostEditor(
-  { initPost, className, ...props }: Props,
+  { initPost, postPath, className, ...props }: Props,
   ref: ForwardedRef<Reference>
 ) {
   const [post, setPost] = useState<Post>(initPost);
@@ -82,7 +84,11 @@ function _PostEditor(
         }}
         ref={metaEditorRef}
       ></MetaEditor>
-      <BlockEditor initMarkdown={post.content} ref={editorRef}></BlockEditor>
+      <BlockEditor
+        postPath={postPath}
+        initMarkdown={post.content}
+        ref={editorRef}
+      ></BlockEditor>
     </div>
   );
 }

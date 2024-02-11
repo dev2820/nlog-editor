@@ -30,6 +30,27 @@ function underline(turndownService: TurndownService) {
   });
 }
 
+function figure(turndownService: TurndownService) {
+  turndownService.addRule('figure', {
+    filter: ['figure'],
+    replacement: function (content: string, node: HTMLElement) {
+      const img = node.querySelector('img');
+      const figcaption = node.querySelector('figcaption');
+
+      if (img) {
+        const filename = getFilenameFromUrl(img.src);
+
+        return `<figure>
+          <img src="./${filename}" alt="${filename}" />
+          <figcaption>${figcaption ? figcaption.textContent : ''}</figcaption>
+        </figure>`;
+      }
+
+      return content;
+    }
+  });
+}
+
 const turndownService = new TurndownService({
   headingStyle: 'atx',
   fence: '```',
@@ -37,7 +58,7 @@ const turndownService = new TurndownService({
   codeBlockStyle: 'fenced'
 });
 
-turndownService.use([strikethrough, underline]);
+turndownService.use([strikethrough, underline, figure]);
 
 turndownService.addRule('image', {
   filter: ['img'],

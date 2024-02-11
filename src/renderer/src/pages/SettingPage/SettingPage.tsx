@@ -1,6 +1,8 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 
 import { Button, Input } from '@/components/Common';
+import { EnvSchema } from '@/requests/EnvSchema';
+import { isError } from '@/utils/type';
 import { css } from '@style/css';
 
 const PLZ_WRITE_FILE_PATH = '탐색기가 기준삼을 경로를 입력해주세요';
@@ -16,11 +18,15 @@ export function SettingPage() {
   }
 
   function handleUpdatePath() {
-    window.api.setBasePath(path);
+    EnvSchema.updateBasePath(path);
   }
 
   async function initBasePath() {
-    const basePath = await window.api.fetchBasePath();
+    const basePath = await EnvSchema.fetchBasePath();
+    if (isError(basePath)) {
+      alert('basepath를 가져오는데 실패했습니다');
+      return;
+    }
     setPath(basePath);
   }
 
