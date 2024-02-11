@@ -90,7 +90,6 @@ export async function fetchFileStructure(): Promise<File<'post' | 'image'>[]> {
       })
     );
     const postNames = fileNames.filter((fileName, index) => {
-      console.log(fileName, fileStats[index]);
       return fileStats[index].isDirectory() && !fileName.startsWith('.');
     });
 
