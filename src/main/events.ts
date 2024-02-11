@@ -89,8 +89,9 @@ export async function fetchFileStructure(): Promise<File<'post' | 'image'>[]> {
         return fs.lstat(filePath);
       })
     );
-    const postNames = fileNames.filter((_, index) => {
-      return fileStats[index].isDirectory();
+    const postNames = fileNames.filter((fileName, index) => {
+      console.log(fileName, fileStats[index]);
+      return fileStats[index].isDirectory() && !fileName.startsWith('.');
     });
 
     const files = postNames.map((postName) => {
