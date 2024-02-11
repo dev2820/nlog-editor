@@ -95,7 +95,6 @@ export function PostEditorPage() {
     // TODO: id가 비어있는 경우를 해결해야한다.
     const postPath = new URL(id ?? '', 'none://' + maybeBasePath + '/')
       .pathname;
-    console.log(postPath);
     setPostPath(postPath);
   }
 
