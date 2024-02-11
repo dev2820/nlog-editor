@@ -1,6 +1,13 @@
 import TurndownService from 'turndown';
+import { strikethrough } from 'turndown-plugin-gfm';
 
 import { getFilenameFromUrl } from '@/utils/url';
+
+/**
+ * remark의 inverse를 활용해볼 것
+ *
+ * https://unifiedjs.com/learn/recipe/remark-html/#how-to-turn-html-into-markdown
+ */
 
 /**
  * FIXME: table에 대해 동작에 이상동작을 함
@@ -13,12 +20,24 @@ import { getFilenameFromUrl } from '@/utils/url';
  *
  * 이후 turndown-plugin-gfm를 이용해 markdown 파싱을 할 것
  */
+
+function underline(turndownService: TurndownService) {
+  turndownService.addRule('underline', {
+    filter: ['ins', 'u'],
+    replacement: function (content: string) {
+      return `<u>${content}</u>`;
+    }
+  });
+}
+
 const turndownService = new TurndownService({
   headingStyle: 'atx',
   fence: '```',
   linkStyle: 'inlined',
   codeBlockStyle: 'fenced'
 });
+
+turndownService.use([strikethrough, underline]);
 
 turndownService.addRule('image', {
   filter: ['img'],

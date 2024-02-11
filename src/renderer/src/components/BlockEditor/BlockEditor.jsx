@@ -15,6 +15,7 @@ import { css, cx } from '@style/css';
 
 import { CodeBlock, insertCodeBlock } from './CodeBlock';
 import { htmlToMarkdown } from './htmlToMarkdown';
+import { markdownToHtml } from './markdownToHtml';
 
 /**
  * TODO: 에디터 스타일링 찾아보기 BlockNote
@@ -75,8 +76,8 @@ function _BlockEditor(
   useEffect(() => {
     if (editor) {
       const getBlocks = async () => {
-        const blocks = await editor.tryParseMarkdownToBlocks(initMarkdown);
-
+        const html = await markdownToHtml(initMarkdown);
+        const blocks = await editor.tryParseHTMLToBlocks(html);
         editor.replaceBlocks(editor.topLevelBlocks, blocks);
       };
       getBlocks();

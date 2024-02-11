@@ -34,7 +34,13 @@
     "lodash-es": "^4.17.21",
     "react-feather": "^2.0.10",
     "react-router-dom": "^6.21.1",
-    "turndown": "^7.1.2"
+    "rehype-stringify": "^10.0.0",
+    "remark-gfm": "^4.0.0",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.0",
+    "turndown": "^7.1.2",
+    "turndown-plugin-gfm": "^1.0.2",
+    "unified": "^11.0.4"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^1.0.1",
