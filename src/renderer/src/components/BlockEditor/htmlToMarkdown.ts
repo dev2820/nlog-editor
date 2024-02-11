@@ -41,10 +41,8 @@ function figure(turndownService: TurndownService) {
       if (img) {
         const filename = getFilenameFromUrl(img.src);
         const caption = figcaption ? figcaption.textContent : '';
-        return `<figure>
-  <img src="./${filename}" alt="" />
-  <figcaption>${caption}</figcaption>
-</figure>`;
+
+        return `![${caption}](./${filename})\n`;
       }
 
       return content;

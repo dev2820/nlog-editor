@@ -26,6 +26,7 @@
     "@codemirror/lang-javascript": "^6.2.1",
     "@electron-toolkit/preload": "^2.0.0",
     "@electron-toolkit/utils": "^2.0.1",
+    "@microflash/remark-figure-caption": "^2.0.2",
     "@uiw/codemirror-theme-dracula": "^4.21.21",
     "@uiw/react-codemirror": "^4.21.21",
     "codemirror": "^6.0.1",
