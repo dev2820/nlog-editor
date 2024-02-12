@@ -11,6 +11,7 @@ import { PageLayout } from './layouts/PageLayout';
  * TODO: 테마 정하기
  * TODO: 파일 목록에 이미지도 볼 수 있게 하기
  * TODO: Post에 author 추가 (SettingPage에도)
+ * TODO: default 화면 만들기
  */
 
 export default function App() {
