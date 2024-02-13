@@ -1,8 +1,10 @@
 import { isNil } from '@/utils/type';
-import { type File } from '@type/file';
+import { FileInfo } from '@type/fileInfo';
 
 export class FileSchema {
-  static async fetchFileStructure(): Promise<File<'post' | 'image'>[] | Error> {
+  static async fetchFileStructure(): Promise<
+    FileInfo<'post' | 'image'>[] | Error
+  > {
     try {
       const result = await window.api.fetchFileStructure();
       if (isNil(result)) {

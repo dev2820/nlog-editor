@@ -9,7 +9,7 @@ import { PostSchema } from '@/requests/PostSchema';
 import { path } from '@/utils/path';
 import { isError, isNil } from '@/utils/type';
 import { css, cx } from '@style/css';
-import { type File } from '@type/file';
+import { FileInfo } from '@type/fileInfo';
 import { type Post } from '@type/post';
 
 import {
@@ -29,7 +29,7 @@ export function PostEditorPage() {
   const { id } = useParams();
   const [newPostTitle, setNewPostTitle] = useState('');
   const [post, setPost] = useState<Post>(initPost);
-  const [files, setFiles] = useState<File<'post' | 'image'>[]>([]);
+  const [files, setFiles] = useState<FileInfo<'post' | 'image'>[]>([]);
   const editorRef = useRef<PostEditorReference>(null);
   const [postPath, setPostPath] = useState<string>('');
 

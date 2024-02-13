@@ -4,7 +4,7 @@ import path from 'node:path';
 import { BrowserWindow } from 'electron';
 import matter from 'gray-matter';
 
-import { type File } from '@type/file';
+import { FileInfo } from '@type/fileInfo';
 import { Post } from '@type/post';
 
 import store from './store';
@@ -78,7 +78,9 @@ export async function createPost(
   }
 }
 
-export async function fetchFileStructure(): Promise<File<'post' | 'image'>[]> {
+export async function fetchFileStructure(): Promise<
+  FileInfo<'post' | 'image'>[]
+> {
   const basePath = (store.get('basePath') as string) ?? '';
 
   try {
@@ -97,7 +99,7 @@ export async function fetchFileStructure(): Promise<File<'post' | 'image'>[]> {
       return {
         fileName: postName,
         type: 'post'
-      } as File<'post' | 'image'>;
+      } as FileInfo<'post' | 'image'>;
     });
 
     return files;

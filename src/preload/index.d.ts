@@ -1,6 +1,6 @@
 import { ElectronAPI } from '@electron-toolkit/preload';
 
-import { type File } from '@type/file';
+import { FileInfo } from '@type/fileInfo';
 import { type Post } from '@type/post';
 
 declare global {
@@ -12,7 +12,7 @@ declare global {
       fetchBasePath: () => Promise<string>;
       setBasePath: (basePath: string) => void;
       createPost: (title: string) => Promise<Post | null>;
-      fetchFileStructure: () => Promise<File<'post' | 'image'>[]>;
+      fetchFileStructure: () => Promise<FileInfo<'post' | 'image'>[]>;
       loadPost: (title: string) => Promise<Post | null>;
     };
   }
