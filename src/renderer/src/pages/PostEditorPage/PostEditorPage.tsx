@@ -6,6 +6,7 @@ import { Button, Flex, Input, NavLink } from '@/components/Common';
 import { EnvSchema } from '@/requests/EnvSchema';
 import { FileSchema } from '@/requests/FileSchema';
 import { PostSchema } from '@/requests/PostSchema';
+import { path } from '@/utils/path';
 import { isError, isNil } from '@/utils/type';
 import { css, cx } from '@style/css';
 import { type File } from '@type/file';
@@ -91,9 +92,8 @@ export function PostEditorPage() {
     const maybeBasePath = await EnvSchema.fetchBasePath();
     if (isError(maybeBasePath)) return;
 
-    // TODO: 브라우저에서 path.join할 수 있는 더 좋은 솔루션을 찾아보자
-    const postPath = new URL(id ?? '', 'none://' + maybeBasePath + '/')
-      .pathname;
+    const basePath = maybeBasePath;
+    const postPath = path.join(basePath, id ?? '');
     setPostPath(postPath);
   }
 
