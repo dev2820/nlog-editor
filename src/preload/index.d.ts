@@ -14,6 +14,7 @@ declare global {
       createPost: (title: string) => Promise<Post | null>;
       fetchFileStructure: () => Promise<FileInfo<'post' | 'image'>[]>;
       loadPost: (title: string) => Promise<Post | null>;
+      uploadImage: (targetFolder: string) => Promise<string | null>;
     };
   }
 }

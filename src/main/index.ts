@@ -10,7 +10,8 @@ import {
   handleUpdateBasePath,
   createPost,
   fetchFileStructure,
-  loadPost
+  loadPost,
+  uploadImage
 } from './events';
 import store from './store';
 
@@ -74,6 +75,7 @@ app.whenReady().then(() => {
   ipcMain.handle('create-post', createPost);
   ipcMain.handle('fetch-file-structure', fetchFileStructure);
   ipcMain.handle('load-post', loadPost);
+  ipcMain.handle('upload-image', uploadImage);
 
   protocol.handle('media', (req) => {
     const pathToMedia = new URL(req.url).pathname;

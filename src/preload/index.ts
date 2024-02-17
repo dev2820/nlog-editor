@@ -28,6 +28,9 @@ const api = {
   },
   loadPost: (title: string) => {
     return ipcRenderer.invoke('load-post', title);
+  },
+  uploadImage: (targetFolder: string) => {
+    return ipcRenderer.invoke('upload-image', targetFolder);
   }
 };
 

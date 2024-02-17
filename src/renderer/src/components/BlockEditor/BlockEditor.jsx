@@ -16,24 +16,29 @@ import { css, cx } from '@style/css';
 import { blockTraverse } from './blockTraverse';
 import { CodeBlock, insertCodeBlock } from './CodeBlock';
 import { htmlToMarkdown } from './htmlToMarkdown';
+import { ImageBlock, insertImageBlock } from './ImageBlock';
 import { markdownToHtml } from './markdownToHtml';
 /**
  * TODO: 에디터 테마 커스텀 찾아보기 BlockNote
  * TODO: table 컴포넌트 만들기
+ * 고민: 결국 context api를 사용하는 컴포넌트가 생겨서 종속적인 컴포넌트가 되어버림. 그럼 페이지 폴더 아래로 가야할 것 같은데 말이지...
  */
 
 const blockSchema = {
-  ...omit(defaultBlockSchema, 'table'),
-  codeBlock: CodeBlock.config
+  ...omit(defaultBlockSchema, ['table', 'image']),
+  codeBlock: CodeBlock.config,
+  imageBlock: ImageBlock.config
 };
 const blockSpecs = {
-  ...omit(defaultBlockSpecs, 'table'),
-  codeBlock: CodeBlock
+  ...omit(defaultBlockSpecs, ['table', 'image']),
+  codeBlock: CodeBlock,
+  imageBlock: ImageBlock
 };
 
 const customSlashMenuItemList = [
   ...getDefaultReactSlashMenuItems(blockSchema),
-  insertCodeBlock
+  insertCodeBlock,
+  insertImageBlock
 ];
 
 function _BlockEditor(

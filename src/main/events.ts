@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-import { BrowserWindow } from 'electron';
+import { BrowserWindow, dialog } from 'electron';
 import matter from 'gray-matter';
 
 import { FileInfo } from '@type/fileInfo';
@@ -129,6 +129,32 @@ export async function loadPost(
   } catch (err) {
     return null;
   }
+}
+
+export async function uploadImage(
+  _: Electron.IpcMainInvokeEvent,
+  targetFolder: string
+): Promise<string | null> {
+  const pickedState = await dialog.showOpenDialog({
+    filters: [{ name: 'Images', extensions: ['jpg', 'jpeg', 'png', 'gif'] }],
+    properties: ['openFile']
+  });
+  if (pickedState.canceled) {
+    return Promise.resolve(null);
+  }
+
+  /**
+   * TODO: 이미지가 이미 존재하는 경우 덮어쓸지 물어보는 알림이 필요함
+   * 혹은 이미 존재하는 이미지는 넣지 못하게 하거나?
+   * TODO: 이미지 이름도 정할 수 있게 할까?
+   */
+
+  const filePath = pickedState.filePaths[0];
+  const { name, ext } = path.parse(filePath);
+  const destPath = path.join(targetFolder, `${name}${ext}`);
+  await fs.copyFile(filePath, destPath);
+
+  return destPath;
 }
 
 const getFrontMatter = (

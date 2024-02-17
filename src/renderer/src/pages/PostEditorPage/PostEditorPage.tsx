@@ -3,6 +3,7 @@ import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Button, Flex, Input, NavLink } from '@/components/Common';
+import { PostContext } from '@/contexts/postContext';
 import { EnvSchema } from '@/requests/EnvSchema';
 import { FileSchema } from '@/requests/FileSchema';
 import { PostSchema } from '@/requests/PostSchema';
@@ -109,38 +110,44 @@ export function PostEditorPage() {
   }, [id]);
   /**
    * TODO: postPath 전역상태로 변환 (recoil?)
+   * provider로 감싸기
    */
 
   return (
-    <Flex direction="row" className={style}>
-      <aside className={cx(explorerStyle)}>
-        <Input value={newPostTitle} onChange={handleNewPostTitleChange}></Input>
-        <Button onClick={handleCreateNewPost}>새 글쓰기</Button>
-        {files.map((file) => (
-          <li key={file.fileName}>
-            <NavLink to={`/editor/${file.fileName}`}>{file.fileName}</NavLink>
-          </li>
-        ))}
-      </aside>
-      <Flex
-        as="article"
-        justify="flex-start"
-        direction="column"
-        className={cx(
-          css({
-            flexGrow: 1
-          })
-        )}
-      >
-        <PostEditor
-          postPath={postPath}
-          initPost={post}
-          className={editorLayout}
-          ref={editorRef}
-        ></PostEditor>
-        <Button onClick={handleSavePost}>저장하기</Button>
+    <PostContext.Provider value={{ targetPath: postPath }}>
+      <Flex direction="row" className={style}>
+        <aside className={cx(explorerStyle)}>
+          <Input
+            value={newPostTitle}
+            onChange={handleNewPostTitleChange}
+          ></Input>
+          <Button onClick={handleCreateNewPost}>새 글쓰기</Button>
+          {files.map((file) => (
+            <li key={file.fileName}>
+              <NavLink to={`/editor/${file.fileName}`}>{file.fileName}</NavLink>
+            </li>
+          ))}
+        </aside>
+        <Flex
+          as="article"
+          justify="flex-start"
+          direction="column"
+          className={cx(
+            css({
+              flexGrow: 1
+            })
+          )}
+        >
+          <PostEditor
+            postPath={postPath}
+            initPost={post}
+            className={editorLayout}
+            ref={editorRef}
+          ></PostEditor>
+          <Button onClick={handleSavePost}>저장하기</Button>
+        </Flex>
       </Flex>
-    </Flex>
+    </PostContext.Provider>
   );
 }
 
