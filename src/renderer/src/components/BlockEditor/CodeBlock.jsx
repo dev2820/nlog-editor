@@ -6,6 +6,11 @@ import { isNil } from '@/utils/type';
 
 import { CodeEditor } from '../CodeEditor';
 
+/**
+ * TODO: 블럭을 움직이면 코드가 초기화되는 버그가 있음
+ * TODO: 언어 바꿀 수 있게 해야함
+ */
+
 export const insertCodeBlock = {
   name: 'Insert Code Block',
   hint: 'Used to insert a code block',
@@ -26,7 +31,7 @@ export const insertCodeBlock = {
       'after'
     );
   },
-  aliases: ['code', 'cd'],
+  aliases: ['code', 'cd', '```'],
   group: 'Code',
   icon: <Icon.Code size={18} />
 };
