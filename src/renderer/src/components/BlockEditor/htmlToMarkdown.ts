@@ -54,11 +54,14 @@ const turndownService = new TurndownService({
   headingStyle: 'atx',
   fence: '```',
   linkStyle: 'inlined',
-  codeBlockStyle: 'fenced'
+  codeBlockStyle: 'fenced',
+  blankReplacement: (_: never, node: HTMLElement) => {
+    if (node.tagName === 'P') return '<br />';
+    return '';
+  }
 });
 
 turndownService.use([strikethrough, underline, figure]);
-
 turndownService.addRule('image', {
   filter: ['img'],
   replacement(_: never, node: HTMLImageElement) {
@@ -74,6 +77,6 @@ turndownService.addRule('image', {
   }
 });
 
-export function htmlToMarkdown(html: string) {
+export async function htmlToMarkdown(html: string) {
   return turndownService.turndown(html);
 }

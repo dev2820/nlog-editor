@@ -23,7 +23,6 @@ import { markdownToHtml } from './markdownToHtml';
  * TODO: table 컴포넌트 만들기
  * 고민: 결국 context api를 사용하는 컴포넌트가 생겨서 종속적인 컴포넌트가 되어버림. 그럼 페이지 폴더 아래로 가야할 것 같은데 말이지...
  */
-
 const blockSchema = {
   ...omit(defaultBlockSchema, ['table', 'image']),
   codeBlock: CodeBlock.config,
@@ -51,7 +50,7 @@ function _BlockEditor(
       return {
         async getMarkdown() {
           const html = await editor.blocksToHTMLLossy(editor.topLevelBlocks);
-          const markdown = htmlToMarkdown(html);
+          const markdown = await htmlToMarkdown(html);
           return markdown;
         }
       };
@@ -94,6 +93,18 @@ function _BlockEditor(
           {
             recursive: true,
             onlyType: ['image']
+          }
+        );
+        blockTraverse(
+          blocks,
+          (block) => {
+            if (block.content.length === 1 && block.content[0].text === '\n') {
+              block.content[0].text = '';
+            }
+          },
+          {
+            recursive: true,
+            onlyType: ['paragraph']
           }
         );
         editor.replaceBlocks(editor.topLevelBlocks, blocks);
